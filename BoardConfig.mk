@@ -23,6 +23,10 @@ TARGET_SURFACEFLINGER_UDFPS_LIB := //device/oneplus/aston:libudfps_extension.ast
 # Kernel
 TARGET_KERNEL_CONFIG += vendor/oplus/aston.config
 
+ifeq ($(TARGET_BUILD_PERMISSIVE),true)
+  BOARD_BOOTCONFIG += androidboot.selinux=permissive
+endif
+
 # Kernel modules
 BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules.load.system_dlkm))
 BOARD_SYSTEM_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.systemdlkm_blocklist.msm.kalama

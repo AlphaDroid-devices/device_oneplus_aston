@@ -5,4 +5,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_aston.mk
+    $(LOCAL_DIR)/alpha_aston.mk
+
+COMMON_LUNCH_CHOICES := \
+    alpha_aston-user \
+    alpha_aston-userdebug \
+    alpha_aston-eng
