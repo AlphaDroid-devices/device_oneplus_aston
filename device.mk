@@ -20,6 +20,10 @@ PRODUCT_COPY_FILES += \
 TARGET_SCREEN_HEIGHT := 2376
 TARGET_SCREEN_WIDTH := 1080
 
+# Device-specific settings
+PRODUCT_PACKAGES += \
+    AstonParts
+
 # Display
 PRODUCT_SYSTEM_PROPERTIES += \
     persist.sys.brightness.low.gamma=true
