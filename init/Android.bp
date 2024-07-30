@@ -1,0 +1,6 @@
+prebuilt_etc {
+    name: "init.aston.rc",
+    src: "init.aston.rc",
+    sub_dir: "init",
+    device_specific: true,
+}

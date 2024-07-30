@@ -1,0 +1,10 @@
+#
+# Copyright (C) 2022-2023 The LineageOS Project
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+on boot
+    # Charging control
+    chown system system /sys/class/oplus_chg/battery/mmi_charging_enable
+    chmod 0660 /sys/class/oplus_chg/battery/mmi_charging_enable
