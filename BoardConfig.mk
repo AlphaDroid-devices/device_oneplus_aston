@@ -10,13 +10,30 @@ include device/oneplus/sm8550-common/BoardConfigCommon.mk
 DEVICE_PATH := device/oneplus/aston
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := OP5D35L1,OP5CF9L1
+TARGET_OTA_ASSERT_DEVICE := OP5D35L1,OP5CF9L1,CPH2585,aston
 
 # Display
 TARGET_SCREEN_DENSITY := 450
 
 # Kernel
 TARGET_KERNEL_CONFIG += vendor/oplus/aston.config
+
+# Kernel
+ifeq ($(TARGET_BUILD_PERMISSIVE),true)
+BOARD_BOOTCONFIG := \
+    androidboot.selinux=permissive
+endif
+
+ifeq ($(TARGET_USE_PREBUILT_KERNEL),true)
+TARGET_FORCE_PREBUILT_KERNEL := true
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilts/kernel
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilts/dtb.img
+BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
+BOARD_INCLUDE_DTB_IN_BOOTIMG :=
+BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilts/dtbo.img
+BOARD_KERNEL_SEPARATED_DTBO :=
+endif
+
 
 # Kernel modules
 BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules.load.system_dlkm))
