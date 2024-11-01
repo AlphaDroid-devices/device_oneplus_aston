@@ -27,6 +27,14 @@ $(call soong_config_set,surfaceflinger,udfps_lib,//device/oneplus/aston:libudfps
 # LiveDisplay
 $(call soong_config_set,OPLUS_LINEAGE_LIVEDISPLAY_HAL,ENABLE_AF,true)
 
+# IR
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.consumerir.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/android.hardware.consumerir.xml
+
+PRODUCT_PACKAGES += \
+    android.hardware.ir-service.oplus \
+    consumerir.default
+
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay-lineage
