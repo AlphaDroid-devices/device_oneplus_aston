@@ -37,9 +37,6 @@ BOARD_SUPER_PARTITION_SIZE := 16642998272
 
 # Power
 TARGET_POWER_LIBPERFMGR_MODE_EXTENSION_LIB := //$(DEVICE_PATH)/power:libperfmgr-ext-aston
-TARGET_POWERHAL_MODE_EXT := $(DEVICE_PATH)/power/power-mode.cpp
-BOARD_POWER_CUSTOM_BOARD_LIB += \
-    vendor.oplus.hardware.touch-V1-ndk
 
 # Properties
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
