@@ -22,10 +22,11 @@
 #include <android/binder_manager.h>
 
 namespace aidl {
-namespace android {
+namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
+namespace pixel {
 
 #define DOBULE_TAP_INDEP_ENABLED 1 << 1
 #define DOBULE_TAP_INDEP_DISABLED 1 << 16 
@@ -64,8 +65,9 @@ bool setDeviceSpecificMode(Mode type, bool enabled) {
     }
 }
 
+}  // namespace pixel 
 }  // namespace impl
 }  // namespace power
 }  // namespace hardware
-}  // namespace android
+}  // namespace google
 }  // namespace aidl
