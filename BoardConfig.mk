@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+BUILD_BROKEN_DUP_RULES := true
+
 # Include the common OEM chipset BoardConfig.
 include device/oneplus/sm8550-common/BoardConfigCommon.mk
 
