@@ -27,6 +27,15 @@ ifeq ($(TARGET_BUILD_PERMISSIVE),true)
   BOARD_BOOTCONFIG += androidboot.selinux=permissive
 endif
 
+ifeq ($(TARGET_USES_PREBUILT_DTB), true)
+  BOARD_INCLUDE_DTB_IN_BOOTIMG :=
+  BOARD_USES_QCOM_MERGE_DTBS_SCRIPT :=
+  TARGET_NEEDS_DTBOIMAGE :=
+  TARGET_PREBUILT_DTB := $(DEVICE_PATH)-kernel/dtb.img
+  BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
+  BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)-kernel/dtbo.img
+endif
+
 # Kernel modules
 BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules.load.system_dlkm))
 BOARD_SYSTEM_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.systemdlkm_blocklist.msm.kalama
