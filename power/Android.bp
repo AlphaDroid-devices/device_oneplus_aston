@@ -15,5 +15,5 @@ cc_library_static {
         "android.hardware.power-V5-ndk",
         "libbase",
     ],
-    whole_static_libs: ["vendor.oplus.hardware.touch-V1-ndk"],
+    whole_static_libs: ["vendor.oplus.hardware.touch-V2-ndk"],
 }
