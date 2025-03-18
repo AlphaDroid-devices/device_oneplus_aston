@@ -24,6 +24,10 @@ TARGET_SCREEN_WIDTH := 1080
 PRODUCT_PACKAGES += \
     AstonParts
 
+# Display
+PRODUCT_SYSTEM_PROPERTIES += \
+    sys.brightness.disable_gamma_conversion=true
+
 # IR
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.consumerir.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/android.hardware.consumerir.xml
