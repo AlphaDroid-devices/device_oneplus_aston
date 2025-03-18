@@ -26,7 +26,7 @@ PRODUCT_PACKAGES += \
 
 # Display
 PRODUCT_SYSTEM_PROPERTIES += \
-    persist.sys.brightness.low.gamma=true
+    sys.brightness.disable_gamma_conversion=true
 
 # IR
 PRODUCT_COPY_FILES += \
