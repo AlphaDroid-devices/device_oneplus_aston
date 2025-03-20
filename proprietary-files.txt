@@ -1285,13 +1285,13 @@ odm/etc/nfc/libnfc-mtp-SN220.conf_23861:vendor/etc/libnfc-nxp.conf
 odm/etc/nfc/libnfc-nci.conf_23861:vendor/etc/libnfc-nci.conf
 odm/lib/libsn220u_fw.so:vendor/lib64/libsn220u_fw.so
 
-# Oplus Touch
-odm/bin/hw/vendor-oplus-hardware-touch-V2-service
-odm/bin/touchDaemon
-odm/etc/init/init.touchDaemon.rc
-odm/etc/init/vendor-oplus-hardware-touch-V2-service.rc
-odm/etc/vintf/manifest/manifest_touch_aidl.xml
-odm/lib64/vendor.oplus.hardware.touch-V2-ndk.so;MODULE_SUFFIX=_odm
+# Oplus Touch - CPH2585_14.0.0.307(EX01)
+odm/bin/hw/vendor-oplus-hardware-touch-V2-service|a460f0223c71a5e587a4678d96068c29d29d7e76
+odm/bin/touchDaemon|3e2e306a5358ea9f51029af9ec11710a19a3c353
+odm/etc/init/init.touchDaemon.rc|f46064b8ecadf59fdd58ccdb8200f884739255c8
+odm/etc/init/vendor-oplus-hardware-touch-V2-service.rc|05de56dc4879c2cca3eebdc5716b03165c6aaf1f
+odm/etc/vintf/manifest/manifest_touch_aidl.xml|533fa17a03339bb0ddb42029e20fd9b20e530101
+odm/lib64/vendor.oplus.hardware.touch-V2-ndk.so;MODULE_SUFFIX=_odm|e5c0d980dce7d753aa1415330206e5fe19043e8a
 
 # Sensors config
 odm/etc/sensor/config/aston_qrd_ois_system.json
