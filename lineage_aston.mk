@@ -23,8 +23,8 @@ PRODUCT_MODEL := CPH2585
 PRODUCT_GMS_CLIENTID_BASE := android-oneplus
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BuildDesc="CPH2585IN-user 15 TP1A.220905.001 U.R4T3.1c7e5be_1_2 release-keys" \
-    BuildFingerprint=OnePlus/CPH2585IN/OP5D35L1:15/TP1A.220905.001/U.R4T3.1c7e5be_1_2:user/release-keys \
+    BuildDesc="CPH2585IN-user 15 TP1A.220905.001 U.R4T3.1d02897-82af-82ad release-keys" \
+    BuildFingerprint=OnePlus/CPH2585IN/OP5D35L1:15/TP1A.220905.001/U.R4T3.1d02897-82af-82ad:user/release-keys \
     DeviceName=OP5D35L1 \
     DeviceProduct=CPH2585 \
     SystemDevice=OP5D35L1 \

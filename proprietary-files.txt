@@ -1,5 +1,5 @@
 ## All proprietary files from this list, unless pinned and noted otherwise,
-## are from OnePlus 12R (CPH2585_15.0.0.600(EX01)).
+## are from OnePlus 12R (CPH2585_15.0.0.701(EX01)).
 
 # ACDB
 odm/etc/acdbdata/Audio_Parameter_Version.txt
@@ -928,9 +928,7 @@ odm/lib64/libUpScale.so
 odm/lib64/libVDBayerHDR.so
 odm/lib64/libVDBlurless.so;FIX_SONAME
 odm/lib64/libVDExternal.so
-odm/lib64/libVDPostureDetection.so
 odm/lib64/libVDSuperPhotoAPI.so;FIX_SONAME
-odm/lib64/libVDUpScale.so
 odm/lib64/libVideoEnhance.so
 odm/lib64/libWaterMark.so
 odm/lib64/libXDocProcessSDK.so
