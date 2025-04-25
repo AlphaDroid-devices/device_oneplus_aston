@@ -832,7 +832,7 @@ odm/etc/camera/tonemap/tonemap_lut_9
 odm/etc/camera/wide.bin
 odm/etc/init/init.camera_upate.rc
 odm/etc/init/init.odm.camera.provider.override.rc
-odm/etc/init/occe_create.rc
+odm/etc/init/occe_create.rc|1c5f4939cd607e20e51ea6787f829b3d406deb56
 odm/etc/init/vendor.oplus.hardware.cammidasservice-V1-service.rc
 odm/etc/vintf/manifest/manifest_oplus_camera_rfi.xml
 odm/etc/vintf/manifest/manifest_oplus_cameraextension_aidl.xml
