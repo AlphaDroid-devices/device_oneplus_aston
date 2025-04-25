@@ -30,7 +30,7 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     SystemDevice=OP5D35L1 \
     SystemName=CPH2585
 
-TARGET_USES_PREBUILT_DTB := true
+TARGET_USES_PREBUILT_DTB := false
 
 # Device config
 TARGET_HAS_UDFPS := true
