@@ -35,8 +35,7 @@ public final class FileUtils {
 
     /**
      * Reads the first line of text from the given file.
-     * Reference {@link BufferedReader#readLine()} for clarification on what a
-     * line is
+     * Reference {@link BufferedReader#readLine()} for clarification on what a line is
      *
      * @return the read line contents, or null on failure
      */
@@ -152,15 +151,26 @@ public final class FileUtils {
         try {
             ok = srcFile.renameTo(dstFile);
         } catch (SecurityException e) {
-            Log.w(TAG,
-                    "SecurityException trying to rename " + srcPath + " to " + dstPath,
-                    e);
+            Log.w(TAG, "SecurityException trying to rename " + srcPath + " to " + dstPath, e);
         } catch (NullPointerException e) {
-            Log.e(TAG,
-                    "NullPointerException trying to rename " + srcPath + " to " +
-                            dstPath,
-                    e);
+            Log.e(TAG, "NullPointerException trying to rename " + srcPath + " to " + dstPath, e);
         }
         return ok;
+    }
+
+    public static boolean getFileValueAsBoolean(String filename, boolean defValue) {
+        String fileValue = readOneLine(filename);
+        if(fileValue!=null){
+            return (fileValue.equals("0")?false:true);
+        }
+        return defValue;
+    }
+
+    public static String getFileValue(String filename, String defValue) {
+        String fileValue = readOneLine(filename);
+        if(fileValue!=null){
+            return fileValue;
+        }
+        return defValue;
     }
 }
