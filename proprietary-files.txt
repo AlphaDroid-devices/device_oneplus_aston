@@ -66,7 +66,6 @@ odm/etc/lvacfs_params/2mic/audiozoom_9.txt
 
 # Camera
 odm/bin/hw/vendor.oplus.hardware.cammidasservice-V1-service
-odm/bin/occe_create
 odm/etc/camera/AiFace.json
 odm/etc/camera/CameraHWConfiguration.config
 odm/etc/camera/M_FaceAttribute_RGB_age_gender_1.7.1.model.hardcode
@@ -832,7 +831,6 @@ odm/etc/camera/tonemap/tonemap_lut_9
 odm/etc/camera/wide.bin
 odm/etc/init/init.camera_upate.rc
 odm/etc/init/init.odm.camera.provider.override.rc
-odm/etc/init/occe_create.rc
 odm/etc/init/vendor.oplus.hardware.cammidasservice-V1-service.rc
 odm/etc/vintf/manifest/manifest_oplus_camera_rfi.xml
 odm/etc/vintf/manifest/manifest_oplus_cameraextension_aidl.xml
