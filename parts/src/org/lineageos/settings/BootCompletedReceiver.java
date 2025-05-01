@@ -22,16 +22,52 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.preference.PreferenceManager;
+
+import org.lineageos.settings.gamebar.GameBar;
+import org.lineageos.settings.gamebar.GameBarMonitorService;
 import org.lineageos.settings.refreshrate.RefreshUtils;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String TAG = "AstonParts";
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        if (DEBUG) Log.d(TAG, "Received boot completed intent");
-        RefreshUtils.startService(context);
+        String action = intent.getAction();
+        if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+            if (DEBUG) Log.d(TAG, "Received boot completed intent");
+
+            // Restore game bar preferences
+            restoreGameBarOverlayState(context);
+            if (DEBUG) Log.d(TAG, "Restoring GameBar overlay state");
+
+            // Start refresh rate service
+            RefreshUtils.startService(context);
+            if (DEBUG) Log.d(TAG, "Starting RefreshService");
+
+        } else if (Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(action)) {
+            if (DEBUG) Log.d(TAG, "Received locked boot completed intent");
+
+            // Restore game bar preferences
+            restoreGameBarOverlayState(context);
+            if (DEBUG) Log.d(TAG, "Restoring GameBar overlay state");
+        }
+    }
+
+    private void restoreGameBarOverlayState(Context context) {
+        var prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean mainEnabled = prefs.getBoolean("game_bar_enable", false);
+        boolean autoEnabled = prefs.getBoolean("game_bar_auto_enable", false);
+        if (mainEnabled) {
+            GameBar.getInstance(context).applyPreferences();
+            GameBar.getInstance(context).show();
+        }
+        if (autoEnabled) {
+            // Start GameBarMonitorService
+            Intent monitorIntent = new Intent(context, GameBarMonitorService.class);
+            context.startService(monitorIntent);
+        }
     }
 }
