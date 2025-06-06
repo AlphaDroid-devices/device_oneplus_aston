@@ -1,0 +1,6 @@
+get_prop(mediacodec, misctrl_prop)
+get_prop(mediacodec, custom_version_prop)
+
+allow system_suspend sysfs:dir read;
+
+# binder_call(untrusted_app, netlink_route_socket)

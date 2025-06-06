@@ -56,5 +56,9 @@ TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
 # Recovery
 TARGET_RECOVERY_UI_MARGIN_HEIGHT := 103
 
+# SEPolicy
+BOARD_VENDOR_SEPOLICY_DIRS += device/oneplus/aston/sepolicy/vendor
+BOARD_SYSTEM_EXT_SEPOLICY_DIRS += device/oneplus/aston/sepolicy/system_ext
+
 # Include the proprietary files BoardConfig.
 include vendor/oneplus/aston/BoardConfigVendor.mk

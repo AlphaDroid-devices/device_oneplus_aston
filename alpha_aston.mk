@@ -46,8 +46,6 @@ TARGET_FACE_UNLOCK_SUPPORTED := true
 # 3 - gapps
 TARGET_BUILD_PACKAGE := 3
 
-# Launcher
-TARGET_INCLUDE_LAWNCHAIR := false
 ifeq ($(TARGET_BUILD_PACKAGE),3)
 # (valid only for GAPPS builds)
 TARGET_INCLUDE_PIXEL_LAUNCHER := true

@@ -1,0 +1,25 @@
+set_prop(hal_audio_default, vendor_audio_prop)
+get_prop(hal_audio_default, vendor_pd_locater_dbg_prop)
+
+allow hal_bluetooth_default vendor_bt_data_file:dir r_dir_perms;
+
+get_prop(hal_wifi_default, persist_vendor_debug_wifi_prop)
+
+allow priv_app metadata_file:dir r_dir_perms;
+
+get_prop(system_app incremental_prop)
+allow system_app proc_filesystems:file r_file_perms;
+
+get_prop(untrusted_app qemu_hw_prop)
+get_prop(untrusted_app qemu_sf_lcd_density_prop)
+
+get_prop(vendor_hal_gnss_qti, vendor_pd_locater_dbg_prop)
+
+allow vendor_qti_init_shell kmsg_device:chr_file write;
+
+allow artd app_data_file:lnk_file read;
+allow artd vold:fd use;
+
+allow vendor_hal_perf_default su:dir search;
+
+allow vendor_location_xtra_daemon vendor_sysfs_soc_sensitive:file r_file_perms;
