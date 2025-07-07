@@ -17,9 +17,6 @@ TARGET_OTA_ASSERT_DEVICE := OP5D35L1,OP5CF9L1
 # Display
 TARGET_SCREEN_DENSITY := 420
 
-# Fingerprint
-TARGET_SURFACEFLINGER_UDFPS_LIB := //device/oneplus/aston:libudfps_extension.aston
-
 # Kernel
 TARGET_KERNEL_CONFIG += vendor/oplus/aston.config
 
