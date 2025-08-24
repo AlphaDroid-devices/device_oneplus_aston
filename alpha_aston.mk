@@ -58,6 +58,7 @@ endif
 # Debugging
 TARGET_INCLUDE_MATLOG := false
 WITH_ADB_INSECURE := false
+TARGET_BUILD_PERMISSIVE := false
 
 # Extras
 TARGET_INCLUDE_SIMPLE_TUNE := true
