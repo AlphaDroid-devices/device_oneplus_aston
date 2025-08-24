@@ -29,6 +29,9 @@ endif
 
 # Kernel
 TARGET_KERNEL_ADDITIONAL_FLAGS += CONFIG_ASTON_DTB=y
+ifeq ($(TARGET_BUILD_PERMISSIVE),true)
+  BOARD_BOOTCONFIG += androidboot.selinux=permissive
+endif
 
 # Power
 TARGET_TAP_TO_WAKE_NODE := "/proc/touchpanel/double_tap_enable"
