@@ -5,7 +5,7 @@
 #
 
 # Partitions
-BOARD_SUPER_PARTITION_SIZE := 16940199936
+BOARD_SUPER_PARTITION_SIZE := 16642998272
 
 # Include the common OEM chipset BoardConfig.
 include device/oneplus/sm8550-common/BoardConfigCommon.mk
@@ -25,9 +25,8 @@ ifeq ($(TARGET_BUILD_PERMISSIVE),true)
   BOARD_BOOTCONFIG += androidboot.selinux=permissive
 endif
 
-# Partitions
-BOARD_ONEPLUS_DYNAMIC_PARTITIONS_SIZE := 16638803968
-BOARD_SUPER_PARTITION_SIZE := 16642998272
+# Power
+TARGET_POWERHAL_MODE_EXT_LIB := power-ext-oplus
 
 # Properties
 TARGET_ODM_PROP += $(DEVICE_PATH)/odm.prop

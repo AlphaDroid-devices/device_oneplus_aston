@@ -1279,17 +1279,35 @@ odm/firmware/pxlw_i7p_panel_AA551_P_3_A0004_dsc_cmd.fw
 vendor/etc/display/qdcm_calib_data_AA551_P_3_A0004_dsc_cmd_mode_panel.json
 vendor/etc/ltm_config_AA551_P_3_A0004_dsc_cmd_mode_panel.xml
 
+# Fingerprint firmware
+odm/vendor/firmware/uff_gx.b00
+odm/vendor/firmware/uff_gx.b01
+odm/vendor/firmware/uff_gx.b02
+odm/vendor/firmware/uff_gx.b03
+odm/vendor/firmware/uff_gx.b04
+odm/vendor/firmware/uff_gx.b05
+odm/vendor/firmware/uff_gx.b06
+odm/vendor/firmware/uff_gx.b07
+odm/vendor/firmware/uff_gx.b08
+odm/vendor/firmware/uff_gx.mdt
+odm/vendor/firmware/uff_spi.b00
+odm/vendor/firmware/uff_spi.b01
+odm/vendor/firmware/uff_spi.b02
+odm/vendor/firmware/uff_spi.b03
+odm/vendor/firmware/uff_spi.b04
+odm/vendor/firmware/uff_spi.b05
+odm/vendor/firmware/uff_spi.b06
+odm/vendor/firmware/uff_spi.b07
+odm/vendor/firmware/uff_spi.b08
+odm/vendor/firmware/uff_spi.mdt
+
 # NFC
 odm/etc/nfc/libnfc-mtp-SN220.conf_23861:vendor/etc/libnfc-nxp.conf
 odm/etc/nfc/libnfc-nci.conf_23861:vendor/etc/libnfc-nci.conf
 odm/lib/libsn220u_fw.so:vendor/lib64/libsn220u_fw.so
 
-# Oplus Touch
-odm/bin/hw/vendor-oplus-hardware-touch-V2-service
-odm/bin/touchDaemon
-odm/etc/init/init.touchDaemon.rc
-odm/etc/init/vendor-oplus-hardware-touch-V2-service.rc
-odm/etc/vintf/manifest/manifest_touch_aidl.xml
+# OPLUS URCC
+# odm/lib64/vendor.oplus.hardware.urcc-V1-ndk.so
 
 # Sensors config
 odm/etc/sensor/config/aston_qrd_ois_system.json
@@ -1346,3 +1364,4 @@ odm/etc/wifi/kiwi/bdwlan.b0a
 odm/etc/wifi/kiwi/bdwlan.b0ie
 odm/etc/wifi/kiwi/bdwlan.elf
 odm/etc/wifi/kiwi/regdb.bin
+odm/vendor/etc/wifi/WCNSS_qcom_cfg.ini
