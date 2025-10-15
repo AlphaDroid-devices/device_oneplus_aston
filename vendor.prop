@@ -1,6 +1,9 @@
 # Bluetooth
 bluetooth.device.default_name=OnePlus 12R
 
+# Device name
+ro.product.marketname=OnePlus 12R
+
 # Graphics
 ro.surface_flinger.set_idle_timer_ms=250
 ro.surface_flinger.set_touch_timer_ms=300
