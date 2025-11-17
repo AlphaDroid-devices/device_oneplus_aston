@@ -4,6 +4,11 @@
     "target_path": "device/oneplus/sm8550-common"
   },
   {
+    "repository": "crdroidandroid/proprietary_vendor_oneplus_ir",
+    "target_path": "vendor/oneplus/ir",
+    "remote": "crdroid-gitlab"
+  },
+  {
     "repository": "TheMuppets/proprietary_vendor_oneplus_aston",
     "target_path": "vendor/oneplus/aston",
     "branch": "lineage-23.2"
