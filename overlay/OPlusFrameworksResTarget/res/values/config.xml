@@ -152,44 +152,49 @@
          This array should have size one greater than the size of the config_autoBrightnessLevels
          array. The brightness values must be non-negative and non-decreasing. This must be
          overridden in platform specific overlays -->
-    <array name="config_autoBrightnessDisplayValuesNits">
-        <item>2.5</item>
-        <item>7.5</item>
-        <item>13</item>
-        <item>18</item>
-        <item>25</item>
-        <item>30</item>
-        <item>38</item>
-        <item>45</item>
-        <item>50</item>
-        <item>55</item>
-        <item>60</item>
-        <item>70</item>
-        <item>79</item>
-        <item>82</item>
-        <item>90</item>
-        <item>98</item>
-        <item>106</item>
-        <item>113</item>
-        <item>152</item>
-        <item>160</item>
-        <item>168</item>
-        <item>177</item>
-        <item>185</item>
-        <item>194</item>
-        <item>203</item>
-        <item>212</item>
-        <item>222</item>
-        <item>232</item>
-        <item>243</item>
-        <item>391</item>
-        <item>500</item>
-        <item>545</item>
-        <item>600</item>
-        <item>650</item>
-        <item>720</item>
-        <item>800</item>
-    </array>
+     <array name="config_autoBrightnessDisplayValuesNits">
+     <!-- Region A: very low lux, big boost -->
+     <item>20</item>   <!-- was 2.5 -->
+     <item>25</item>   <!-- was 7.5 -->
+     <item>30</item>   <!-- was 13 -->
+     <item>35</item>   <!-- was 18 -->
+     <item>40</item>   <!-- was 25 -->
+     <item>48</item>   <!-- was 30 -->
+     <item>56</item>   <!-- was 38 -->
+     <item>64</item>   <!-- was 45 -->
+
+     <!-- Region B: low / medium-low, still strong boost -->
+     <item>72</item>   <!-- was 50 -->
+     <item>80</item>   <!-- was 55 -->
+     <item>90</item>   <!-- was 60 -->
+     <item>100</item>  <!-- was 70 -->
+     <item>115</item>  <!-- was 79 -->
+     <item>125</item>  <!-- was 82 -->
+     <item>140</item>  <!-- was 90 -->
+
+     <!-- Region C: mid/high lux slightly boosted -->
+     <item>155</item>  <!-- was 98 -->
+     <item>170</item>  <!-- was 106 -->
+     <item>185</item>  <!-- was 113 -->
+     <item>175</item>  <!-- was 152 -->
+     <item>185</item>  <!-- was 160 -->
+     <item>195</item>  <!-- was 168 -->
+     <item>210</item>  <!-- was 177 -->
+     <item>220</item>  <!-- was 185 -->
+     <item>230</item>  <!-- was 194 -->
+     <item>245</item>  <!-- was 203 -->
+     <item>260</item>  <!-- was 212 -->
+     <item>275</item>  <!-- was 222 -->
+     <item>290</item>  <!-- was 232 -->
+     <item>305</item>  <!-- was 243 -->
+     <item>450</item>  <!-- was 391 -->
+     <item>575</item>  <!-- was 500 -->
+     <item>630</item>  <!-- was 545 -->
+     <item>690</item>  <!-- was 600 -->
+     <item>740</item>  <!-- was 650 -->
+     <item>790</item>  <!-- was 720 -->
+     <item>800</item>  <!-- was 800 -->
+     </array>
 
     <!-- An array of floats describing the screen brightness in nits corresponding to the backlight
          values in the config_screenBrightnessBacklight array.  On OLED displays these  values
@@ -209,7 +214,7 @@
          This array should be equal in size to config_screenBrightnessBacklight. -->
     <integer-array name="config_screenBrightnessBacklight">
         <item>2</item>
-        <item>255</item>
+        <item>4094</item>
     </integer-array>
 
     <!-- Fast brightness animation ramp rate in brightness units per second.
@@ -227,7 +232,7 @@
     <!-- Screen brightness used to dim the screen when the user activity
          timeout expires.  May be less than the minimum allowed brightness setting
          that can be set by the user. -->
-    <item name="config_screenBrightnessDimFloat" format="float" type="dimen">0.16</item>
+    <item name="config_screenBrightnessDimFloat" format="float" type="dimen">0.2</item>
 
     <!-- Screen brightness used to dim the screen while dozing in a very low power state.
          May be less than the minimum allowed brightness setting
@@ -249,7 +254,7 @@
          -2 is invalid so setting will resort to int value specified above.
          Set this to 0.0 to allow screen to go to minimal brightness.
          The user is forbidden from setting the brightness below this level. -->
-    <item type="dimen" name="config_screenBrightnessSettingMinimumFloat">0.02</item>
+    <item type="dimen" name="config_screenBrightnessSettingMinimumFloat">0.06</item>
 
     <!-- Stability requirements in milliseconds for accepting a new brightness level.  This is used
          for debouncing the light sensor.  Different constants are used to debounce the light sensor
