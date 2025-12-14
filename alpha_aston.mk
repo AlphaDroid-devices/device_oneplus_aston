@@ -33,6 +33,9 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 # Prebuilt DTB
 TARGET_USES_PREBUILT_DTB := false
 
+# System
+TARGET_EXCLUDE_BACKUPTOOL := true
+
 # Device config
 TARGET_HAS_UDFPS := true
 TARGET_ENABLE_BLUR := true
