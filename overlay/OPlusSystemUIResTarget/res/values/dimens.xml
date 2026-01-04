@@ -29,4 +29,12 @@
     <!-- Microns/ums (1000 um = 1mm) per pixel for the given device. If unspecified, UI that
          relies on this value will not be sized correctly. -->
     <item name="pixel_pitch" format="float" type="dimen">56.5</item>
+
+    <!-- Tri-state UI -->
+    <dimen name="tri_state_down_dialog_position">585px</dimen>
+    <dimen name="tri_state_down_dialog_position_l">470px</dimen>
+    <dimen name="tri_state_middle_dialog_position">390px</dimen>
+    <dimen name="tri_state_middle_dialog_position_l">382px</dimen>
+    <dimen name="tri_state_up_dialog_position">220px</dimen>
+    <dimen name="tri_state_up_dialog_position_l">300px</dimen>
 </resources>
