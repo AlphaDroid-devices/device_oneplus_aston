@@ -505,6 +505,7 @@ odm/etc/camera/meishe_lut/vivid-cool.cube.rgb.bin
 odm/etc/camera/meishe_lut/vivid-lut.cube.rgb.bin
 odm/etc/camera/meishe_lut/vivid-warm.cube.rgb.bin
 odm/etc/camera/model/DocDetectV15.xbin
+odm/etc/camera/model/license.lic
 odm/etc/camera/pf/PerfectColorSet/colormap/ColorLut
 odm/etc/camera/pf/PerfectColorSet/colormap/CurveLut
 odm/etc/camera/pf/PerfectColorSet/colormap/colorLut0
@@ -775,6 +776,7 @@ odm/etc/camera/pfb_bin/snapSurfaceBlurBinary.bin
 odm/etc/camera/pfb_bin/snapTex2HWBinary.bin
 odm/etc/camera/pfb_bin/snapYUV420sp2RGBBinary.bin
 odm/etc/camera/pfb_bin/snapseparateYUV2RGBBinary.bin
+odm/etc/camera/singleblur/license_release.license
 odm/etc/camera/singleblur/personseg.bin
 odm/etc/camera/singleblur/preview_seg.json
 odm/etc/camera/sticker/material/animoji/data.zip
@@ -826,6 +828,7 @@ odm/etc/camera/fdc_lite_cl.cache
 odm/etc/camera/fwk_config.json
 odm/etc/camera/gasryuv_1.2_wp.model
 odm/etc/camera/libiceainr_model.dlc
+odm/etc/camera/license_release_fdc.lic
 odm/etc/camera/media_profiles.xml
 odm/etc/camera/model_fdc.data
 odm/etc/camera/mtStereoParams.bin

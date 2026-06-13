@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# OPlus camera ships some non-namespaced vendor props
+BUILD_BROKEN_VENDOR_PROPERTY_NAMESPACE := true
+
 # Partitions
 BOARD_SUPER_PARTITION_SIZE := 16642998272
 
