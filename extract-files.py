@@ -49,7 +49,10 @@ blob_fixups: blob_fixups_user_type = {
         .regex_replace('(NXPLOG_.*_LOGLEVEL)=0x03', '\\1=0x02')
         .regex_replace('NFC_DEBUG_ENABLED=1', 'NFC_DEBUG_ENABLED=0'),
     'odm/lib64/libAlgoProcess.so': blob_fixup()
-        .replace_needed('android.hardware.graphics.common-V3-ndk.so', 'android.hardware.graphics.common-V7-ndk.so'),
+        .replace_needed('android.hardware.graphics.common-V3-ndk.so', 'android.hardware.graphics.common-V7-ndk.so')
+        # Pull our GOT-interposer into com.oplus.camera so it can clamp the P010 LSB->MSB
+        # over-walk (APSFormatConverter::p010LSB2MSB) that SIGSEGVs the algo CapThread.
+        .add_needed('libapsfixup.so'),
     (
         'odm/lib64/libCOppLceTonemapAPI.so',
         'odm/lib64/libSuperRaw.so',
@@ -58,6 +61,7 @@ blob_fixups: blob_fixups_user_type = {
     ): blob_fixup()
         .replace_needed('libstdc++.so', 'libstdc++_vendor.so'),
     (
+        'odm/lib64/libEISLive.so',
         'odm/lib64/libHIS.so',
         'odm/lib64/libOGLManager.so',
         'odm/lib64/libOPAlgoCamFaceBeautyCap.so'
@@ -80,6 +84,18 @@ blob_fixups: blob_fixups_user_type = {
         'vendor/lib64/camx.provider-impl.so',
     ): blob_fixup()
         .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
+    # dodge fixup parity: AOSP-16 ships AIDL graphics.allocator-V2-ndk; OOS-built CHI/Feature2
+    # libs may DT_NEEDED the V1-ndk variant. patchelf --replace-needed is a no-op when the
+    # source DT_NEEDED isn't present, so this is safe even though the current 12R blobs use
+    # the HIDL allocator@4.0 path. Kept for robustness against blob revisions and to match the
+    # proven dodge configuration.
+    (
+        'vendor/lib64/camera/components/com.qti.node.dewarp.so',
+        'vendor/lib64/hw/com.qti.chi.override.so',
+        'vendor/lib64/libcamximageformatutils.so',
+        'vendor/lib64/libchifeature2.so',
+    ): blob_fixup()
+        .replace_needed('android.hardware.graphics.allocator-V1-ndk.so', 'android.hardware.graphics.allocator-V2-ndk.so'),
     'vendor/etc/libnfc-nci.conf': blob_fixup()
         .regex_replace('NFC_DEBUG_ENABLED=1', 'NFC_DEBUG_ENABLED=0')
 }  # fmt: skip

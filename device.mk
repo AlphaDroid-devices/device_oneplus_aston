@@ -17,6 +17,11 @@ PRODUCT_COPY_FILES += \
 TARGET_SCREEN_HEIGHT := 2780
 TARGET_SCREEN_WIDTH := 1264
 
+DEXPREOPT_DISABLED_MODULES += \
+    com.oplus.camera.unit.sdk \
+    com.oplus.camera.unit.sdk.adapter
+
+
 # Display
 PRODUCT_PACKAGES += \
     OplusLtpo
@@ -107,3 +112,8 @@ $(call inherit-product, vendor/oneplus/aston/aston-vendor.mk)
 
 # OPlus Camera (global 12R stack)
 $(call inherit-product-if-exists, vendor/oplus/camera/camera-vendor.mk)
+
+# APS P010 over-walk fix (GOT-interposer loaded into com.oplus.camera via libAlgoProcess.so
+# DT_NEEDED — see device/oneplus/astonc/apsfixup + extract-files.py .add_needed).
+PRODUCT_PACKAGES += \
+    libapsfixup
