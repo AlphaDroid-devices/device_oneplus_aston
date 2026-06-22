@@ -73,7 +73,7 @@ odm/etc/lvacfs_params/2mic/audiozoom_7.txt
 odm/etc/lvacfs_params/2mic/audiozoom_8.txt
 odm/etc/lvacfs_params/2mic/audiozoom_9.txt
 
-# Camera
+# Camera (from CPH2609_16.0.2.400)
 odm/bin/hw/vendor.oplus.hardware.cammidasservice-V1-service|9bd177988ec81f7722799abd5666edf945735c1d
 odm/etc/camera/anc/fusion_model|c9393cbc084e9a7992b88cffed18ce0aeed2ccb2
 odm/etc/camera/anc/fusion_model_post|8663703f930195a62b417e385931f857323454f9
