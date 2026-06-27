@@ -22,6 +22,9 @@ namespace_imports = [
     'hardware/pixelworks/interfaces',
     'hardware/qcom-caf/sm8550',
     'vendor/oneplus/sm8550-common',
+    # odm camera consumers (libEIS, libHIS, ...) are repointed at libui_oplus, which is declared in
+    # the vendor/oplus/camera soong namespace -> import it so those shared_libs deps resolve.
+    'vendor/oplus/camera',
     'vendor/qcom/opensource/display',
     'vendor/qcom/opensource/commonsys-intf/display',
 ]
@@ -53,6 +56,20 @@ blob_fixups: blob_fixups_user_type = {
         # Pull our GOT-interposer into com.oplus.camera so it can clamp the P010 LSB->MSB
         # over-walk (APSFormatConverter::p010LSB2MSB) that SIGSEGVs the algo CapThread.
         .add_needed('libapsfixup.so'),
+    # OOS camera stack expects the small-ABI ColorOS libui (sizeof(GraphicBuffer)==264); AOSP-16's
+    # platform libui is larger, so its GraphicBuffer ctor overran libEIS's 264-byte alloc ->
+    # heap-header corruption -> the hold-to-record SIGSEGV. The small libui is shipped SEPARATELY
+    # as libui_oplus.so by vendor/oplus/camera (renamed so it cannot shadow the platform libui for
+    # the whole vendor partition via the /odm/${LIB} search path -> that caused a boot loop).
+    # Repoint these odm camera consumers at the isolated libui_oplus.so.
+    (
+        'odm/lib64/libEIS.so',
+        'odm/lib64/libHIS.so',
+        'odm/lib64/libsharebuffer_impl.so',
+        'odm/lib64/hw/camera.oemlayer.so',
+        'odm/lib64/camera/components/com.oplus.node.sstabphoto.so',
+    ): blob_fixup()
+        .replace_needed('libui.so', 'libui_oplus.so'),
     (
         'odm/lib64/libCOppLceTonemapAPI.so',
         'odm/lib64/libSuperRaw.so',
