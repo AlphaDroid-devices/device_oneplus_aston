@@ -5,8 +5,16 @@ bluetooth.device.default_name=OnePlus 12R
 ro.product.marketname=OnePlus 12R
 
 # Graphics
-ro.surface_flinger.set_idle_timer_ms=250
+# No SF idle timer: kernel ADFR/LTPO drops the panel self-refresh (20Hz floor,
+# 1Hz idle) underneath the current mode, like stock OOS. An SF idle timer just
+# ping-pongs the timing 60<->120 (each switch resets ADFR stepping and costs
+# DSI commands), fighting the panel's own idle machinery.
 ro.surface_flinger.set_touch_timer_ms=300
+
+# Dev options "Show refresh rate" reads the SDE measured fps (frame-done rate).
+# Not the DDIC test-TE counter: reading test_te from surfaceflinger was
+# problematic; GameBar's FPS meter reads it instead.
+ro.surface_flinger.panel_refresh_rate_node=/sys/class/drm/sde-crtc-0/measured_fps
 
 # USB
 vendor.usb.product_string=OnePlus 12R
