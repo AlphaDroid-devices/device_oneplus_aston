@@ -106,7 +106,8 @@ public class DeviceSettingsService extends Service {
 
     private void initializeTestTe() {
         // Enable the panel test-TE irq so the node reports the real DDIC
-        // self-refresh rate (read by the GameBar FPS meter)
+        // self-refresh rate, consumed by the SurfaceFlinger "Show refresh rate"
+        // overlay via ro.surface_flinger.panel_refresh_rate_node
         try {
             if (FileUtils.isFileWritable(Constants.NODE_TEST_TE)) {
                 FileUtils.writeLine(Constants.NODE_TEST_TE, "1");

@@ -1,4 +1,5 @@
-# Show refresh rate overlay reads the panel test-TE counter
-# (/sys/class/drm/sde-crtc-0/measured_fps, ro.surface_flinger.panel_refresh_rate_node)
+# "Show refresh rate" overlay reads the panel test-TE counter (real DDIC
+# self-refresh rate) via ro.surface_flinger.panel_refresh_rate_node =
+# /sys/kernel/oplus_display/test_te (labelled vendor_sysfs_graphics).
 allow surfaceflinger vendor_sysfs_graphics:dir search;
 allow surfaceflinger vendor_sysfs_graphics:file r_file_perms;

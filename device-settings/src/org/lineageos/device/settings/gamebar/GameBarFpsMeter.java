@@ -25,7 +25,6 @@ import android.window.TaskFpsCallback;
 import androidx.preference.PreferenceManager;
 
 import org.lineageos.device.settings.Constants;
-import org.lineageos.device.settings.utils.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -39,8 +38,11 @@ public class GameBarFpsMeter {
     private static final long STALENESS_THRESHOLD_MS = 2000;
     private static final long TASK_CHECK_INTERVAL_MS = 1000;
 
-    // "legacy" = panel test-TE counter (real DDIC refresh rate, shows LTPO),
-    // "new" = TaskFpsCallback (per-task render fps)
+    // "legacy" = CRTC measured_fps (SurfaceFlinger composition rate = what a game
+    // actually renders on screen; same node the FPS Info tile shows),
+    // "new" = TaskFpsCallback (per-task render fps).
+    // The real panel self-refresh rate (test_te) belongs to the SF "Show refresh
+    // rate" overlay, not here.
     private static final String FPS_METHOD_DEFAULT = "legacy";
 
     private static GameBarFpsMeter sInstance;
@@ -81,10 +83,7 @@ public class GameBarFpsMeter {
     public void start() {
         String method = mPrefs.getString("game_bar_fps_method", FPS_METHOD_DEFAULT);
         if (!"new".equals(method)) {
-            // Panel-refresh method: make sure the test-TE irq is enabled (it is
-            // enabled at boot by DeviceSettingsService, but re-assert in case the
-            // service was not up yet or the node was toggled since)
-            FileUtils.writeLine(Constants.NODE_TEST_TE, "1");
+            // Sysfs method reads measured_fps directly - nothing to enable.
             return;
         }
 
@@ -130,24 +129,28 @@ public class GameBarFpsMeter {
     }
 
     /**
-     * Reads the panel's real DDIC self-refresh rate from the ADFR test-TE counter
-     * (LTPO: 1Hz idle, 20/30Hz static floor, up to 120Hz active). The previous
-     * source, /sys/class/drm/sde-crtc-0/measured_fps, only counted SurfaceFlinger
-     * commits and said nothing about the actual panel refresh.
-     * Returns the last known rate while the counter has no fresh measurement yet
-     * (it reports 0 until two TE pulses have been observed after enabling).
+     * Reads the CRTC measured_fps counter = the SurfaceFlinger composition rate,
+     * i.e. how fast the foreground content is actually drawn (what you want as a
+     * game FPS meter). This is the same node the FPS Info tile reads, so the two
+     * agree. It is NOT the panel self-refresh rate - that lives in the SF "Show
+     * refresh rate" overlay (test_te). Parses either a plain number or a
+     * "label: N" line, matching FPSInfoService. Keeps the last value on a bad read.
      */
     private float readLegacyFps() {
-        try (BufferedReader br = new BufferedReader(new FileReader(Constants.NODE_TEST_TE))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(Constants.NODE_MEASURED_FPS))) {
             String line = br.readLine();
             if (line != null) {
-                float fps = Float.parseFloat(line.trim());
+                String token = line.trim();
+                if (token.contains(": ")) {
+                    token = token.split("\\s+")[1];
+                }
+                float fps = Float.parseFloat(token);
                 if (fps > 0) {
                     mCurrentFps = fps;
                 }
                 return mCurrentFps > 0 ? mCurrentFps : -1f;
             }
-        } catch (IOException | NumberFormatException e) {
+        } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
         }
         return -1f;
     }
