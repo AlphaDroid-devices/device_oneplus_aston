@@ -4,3 +4,7 @@ on boot
     chmod 0666 /sys/kernel/oplus_display/pwm_onepulse
     chown system system /sys/kernel/oplus_display/hbm_max
     chmod 0664 /sys/kernel/oplus_display/hbm_max
+    # Panel test-TE counter (real DDIC refresh rate); DeviceSettingsService
+    # writes 1 at boot to enable the irq, GameBar FPS meter reads the rate
+    chown system system /sys/kernel/oplus_display/test_te
+    chmod 0664 /sys/kernel/oplus_display/test_te

@@ -108,9 +108,15 @@ public class Constants {
     public static final String NODE_HBM = "/sys/kernel/oplus_display/hbm_max";
     public static final String KEY_HBM = "hbm_max";
 
+    /** Panel test-TE counter: real DDIC self-refresh rate (LTPO). Write "1" to
+     *  enable the irq (done at boot by DeviceSettingsService); reads return the
+     *  measured rate, or 0 until two TE pulses have been observed. */
+    public static final String NODE_TEST_TE = "/sys/kernel/oplus_display/test_te";
+
     /** Refresh rate */
     public static final String KEY_REFRESH_RATE_MODE = "refresh_rate_mode";
     /** SharedPreferences key for per-app refresh rate overrides (pipe-separated "pkg:fps|pkg:fps") */
     public static final String KEY_REFRESH_RATE_APPS = "refresh_rate_apps";
-    public static final int REFRESH_RATE_DEFAULT = 60;
+    /** 0 = auto: leave the system refresh rate settings untouched */
+    public static final int REFRESH_RATE_DEFAULT = 0;
 }
