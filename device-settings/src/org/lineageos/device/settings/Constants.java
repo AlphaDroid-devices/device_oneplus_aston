@@ -113,6 +113,13 @@ public class Constants {
      *  measured rate, or 0 until two TE pulses have been observed. */
     public static final String NODE_TEST_TE = "/sys/kernel/oplus_display/test_te";
 
+    /** ADFR/LTPO min fps request: 0 = auto (panel self-refresh drops to the
+     *  timing's lowest table entry: 20Hz active floor, 1Hz idle), N = fixed
+     *  (kernel clamps into the current timing's table, so writing the tile
+     *  rate pins the DDIC at the mode rate). Applied by the kernel
+     *  immediately and re-applied on every panel enable/timing switch. */
+    public static final String NODE_ADFR_MIN_FPS = "/sys/kernel/oplus_display/adfr_min_fps";
+
     /** Refresh rate */
     public static final String KEY_REFRESH_RATE_MODE = "refresh_rate_mode";
     /** SharedPreferences key for per-app refresh rate overrides (pipe-separated "pkg:fps|pkg:fps") */

@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager;
 
 import org.lineageos.device.settings.Constants;
 import org.lineageos.device.settings.display.HbmController;
+import org.lineageos.device.settings.utils.FileUtils;
 import org.lineageos.device.settings.utils.ForegroundAppDetector;
 
 public class RefreshRateMonitorService extends Service {
@@ -59,6 +60,8 @@ public class RefreshRateMonitorService extends Service {
         super.onDestroy();
         stopAppMonitoring();
         restoreRefreshRates();
+        // hand the panel back to dynamic LTPO along with the user's own settings
+        FileUtils.writeLine(Constants.NODE_ADFR_MIN_FPS, "0");
         sInstance = null;
         if (Constants.DEBUG) Log.i(TAG, "Service destroyed");
     }
@@ -173,6 +176,10 @@ public class RefreshRateMonitorService extends Service {
             if (Constants.DEBUG) Log.i(TAG, "HBM active, skipping refresh rate change");
             return;
         }
+
+        // Fixed rates mean fixed all the way down: pin the panel self-refresh at
+        // the mode rate too; auto (0) re-enables dynamic LTPO (20Hz floor, 1Hz idle)
+        FileUtils.writeLine(Constants.NODE_ADFR_MIN_FPS, String.valueOf(fps));
 
         if (fps == 0) {
             // Auto mode: hand control back to the system by restoring the user's
