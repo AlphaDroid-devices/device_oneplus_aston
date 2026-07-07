@@ -65,6 +65,7 @@ TARGET_BUILD_PERMISSIVE := false
 
 # Extras
 TARGET_INCLUDE_SIMPLE_TUNE := true
+TARGET_PREBUILT_BCR := true
 
 # Maintainer
 ALPHA_BUILD_TYPE := Official
