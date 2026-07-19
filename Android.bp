@@ -1,2 +1,20 @@
 soong_namespace {
 }
+
+// The OPlus SR consumers load the models by their stock .bin names, but the
+// vendor tree has to store them as .so so they build as cc_prebuilt_library_shared
+// (ELF files are rejected in PRODUCT_COPY_FILES). Declared here rather than in the
+// vendor tree so re-running extract-files.py doesn't drop them.
+install_symlink {
+    name: "sr_models.bin_symlink",
+    device_specific: true,
+    installed_location: "lib64/sr_models.bin",
+    symlink_target: "sr_models.so",
+}
+
+install_symlink {
+    name: "sr_ref_models.bin_symlink",
+    device_specific: true,
+    installed_location: "lib64/sr_ref_models.bin",
+    symlink_target: "sr_ref_models.so",
+}

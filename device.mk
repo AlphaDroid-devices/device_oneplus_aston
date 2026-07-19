@@ -17,6 +17,11 @@ PRODUCT_COPY_FILES += \
 TARGET_SCREEN_HEIGHT := 2780
 TARGET_SCREEN_WIDTH := 1264
 
+# Camera (SR model .bin names, see Android.bp)
+PRODUCT_PACKAGES += \
+    sr_models.bin_symlink \
+    sr_ref_models.bin_symlink
+
 # Display
 # (no OplusLtpo: the LTPO toggle is superseded by the refresh rate tile —
 #  fixed rates pin the panel via adfr_min_fps, auto = dynamic LTPO;

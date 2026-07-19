@@ -1042,6 +1042,7 @@ odm/lib64/libremosaiclib_s5kjn1.so;FIX_SONAME|01d4d61cc30b9a0ec599946c98c6247145
 odm/lib64/librmsclib1.so|c3065ceaaab55bb2b9c5fcc72de332b9282547b4
 odm/lib64/libsaveshaderbin.so|589a6fbd6d8220e074f575d1cff38fea4889c1a8
 odm/lib64/libsdk_sr.so|05cf8f1cf72be53426e3e57608b240c5783a74fe
+odm/lib64/libsdk_sr_ref.so|75b6b8cc4df75533c7ed5aab03f789c5c2b29dfc
 odm/lib64/libsharebuffer.so|3bc7f3e0d3870800d6059a2e6c06a27636817f8d
 odm/lib64/libsharebuffer_impl.so|1ab2533927b04d6a95dede6f9f6d9078bbe84a32|1bc5766105e2d4b91366e60ebab269e531175ab3
 odm/lib64/libsnpe_loader.so|3c14e2db13de616cc8986364682558dd2db6fd9e
@@ -1057,6 +1058,8 @@ odm/lib64/libwatermark_photo.so|59cce4212fb674ae621806ba3b1cc39759c5bd70
 odm/lib64/libwrapper_te.so|37b60bf9339e76f4532bd7c3ba483d770614cee8
 odm/lib64/libyuv2.so|120a7fe2bccfce7b00895c8295f5060c5695e7b5|745a7e72cf4ca6f0c7e7b67f5b4554e2b6459cd6
 odm/lib64/libyuvwrapper.so|24ebb4141d4407026f91147fd6378114de020bb6
+odm/lib64/sr_models.bin:odm/lib64/sr_models.so|4fcaa67c3d15760a87860138a2c5f87092c2796a
+odm/lib64/sr_ref_models.bin:odm/lib64/sr_ref_models.so|70de3fd188b6fef0c96bb86f70da8a31e2d04c31
 odm/lib64/vendor.oplus.hardware.camera_rfi-V1-ndk.so|6a947ef646d5dea3e37cfede26565f0820279a75
 odm/lib64/vendor.oplus.hardware.camera_rfi-V1-service-impl.so|f1a785e71bb6783558ab701bc03e58915c54bbb2
 odm/lib64/vendor.oplus.hardware.cameraextension-V1-service-impl.so|ebf22c1f210725179dd7eeb53f4089be43605a8f
