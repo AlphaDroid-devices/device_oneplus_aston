@@ -188,4 +188,40 @@
         <screenBrightnessRampDecrease>0.05</screenBrightnessRampDecrease>
         <allowInLowPowerMode>false</allowInLowPowerMode>
     </hdrBrightnessConfig>
+
+    <!-- Route auto-brightness to the OPLUS Fusion Light Sensor: the stock
+         content-immune android.sensor.light, registered by the fusion ext-port
+         (vendor/oneplus/fusion + the frameworks/native libsensorservice patch). It
+         subtracts the panel's own emission using the CWB feed (cwb-host), so its
+         lux tracks real ambient regardless of on-screen content. This supersedes
+         the earlier qti.sensor.bri_light routing (bri_light's CWB compensation was
+         structurally inert on aston — see aston-autobrightness.md). Falls back to
+         config_displayLightSensorType/default light sensor if absent. -->
+    <lightSensor>
+        <type>android.sensor.light</type>
+        <name>OPLUS Fusion Light Sensor Next Gen</name>
+    </lightSensor>
+
+    <!-- Minimum absolute lux change required before auto-brightness reacts,
+         mirroring stock ColorOS's under-screen-sensor reaction floor
+         (OplusBrightnessAmbientAdapter STABLE_RIGHT_MIN_LUX_UNDER_SCREEN_LIGHT
+         = 7.01 large / 4.2 small: changes below it are ignored outright).
+         Darkening uses the large floor (7): the engine's stale-CWB transients
+         during scrolls produce multi-second hard-0 runs from a ~5 lux base
+         (measured amazon.es scroll 2026-07-18) that a smaller minimum passes.
+         The fusion sensor's residual content error is ~0.3-5.5 lux at night
+         (measured 2026-07-18, balanced white/dark at ~+3 lux, scales with
+         panel brightness); without a floor the ABC chases it on the steep
+         low-lux curve. Percentage bands still come from the overlay
+         (config_ambientBrightening/DarkeningThresholds) - HysteresisLevels
+         falls back per-element when no brightnessThresholdPoints are given,
+         and applies max(percentage threshold, value +/- minimum). -->
+    <ambientBrightnessChangeThresholds>
+        <brighteningThresholds>
+            <minimum>6</minimum>
+        </brighteningThresholds>
+        <darkeningThresholds>
+            <minimum>7</minimum>
+        </darkeningThresholds>
+    </ambientBrightnessChangeThresholds>
 </displayConfiguration>

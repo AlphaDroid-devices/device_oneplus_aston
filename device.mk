@@ -23,9 +23,6 @@ PRODUCT_PACKAGES += \
     sr_ref_models.bin_symlink
 
 # Display
-# (no OplusLtpo: the LTPO toggle is superseded by the refresh rate tile —
-#  fixed rates pin the panel via adfr_min_fps, auto = dynamic LTPO;
-#  adfr_config stays at the panel DT default 0xe51)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/display/displayconfig.xml:$(TARGET_COPY_OUT_VENDOR)/etc/displayconfig/display_id_4630946607878435459.xml
 
@@ -117,3 +114,6 @@ $(call inherit-product-if-exists, vendor/oplus/camera/camera-vendor.mk)
 # DT_NEEDED — see device/oneplus/astonc/apsfixup + extract-files.py .add_needed).
 PRODUCT_PACKAGES += \
     libapsfixup
+
+# OPLUS Fusion Light Sensor
+$(call inherit-product-if-exists, vendor/oneplus/fusion/fusion-vendor.mk)

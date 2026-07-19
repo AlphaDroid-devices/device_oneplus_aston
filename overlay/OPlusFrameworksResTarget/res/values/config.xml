@@ -58,7 +58,7 @@
     <!-- Darkening debounce raised for the same reason: switching to a dark app
          removes the panel's own leak from the lux reading and looks like the room
          got darker. 1.5s skips transition animations and short dark flashes. -->
-    <integer name="config_autoBrightnessDarkeningLightDebounce">1500</integer>
+    <integer name="config_autoBrightnessDarkeningLightDebounce">4000</integer>
 
     <!-- The maximum range of gamma adjustment possible using the screen
          auto-brightness adjustment setting. -->
@@ -290,20 +290,21 @@
          lux * (1.0f + CONSTRAINT_VALUE). When the current lux is higher than this threshold,
          the screen brightness is recalculated. See the config_ambientThresholdLevels
          description for how the constraint value is chosen. -->
-     <!-- Mid-lux brightening constraints are kept high because residual
-          screen-content leakage through the under-display ALS lands mostly in the
-          50-2000 lux band; real ambient changes (walking outside) exceed these
-          easily. A full-white page leaks up to roughly +100% of ambient in the
-          indoor bands, so every band up to 2000 lux must require more than a
-          doubling of lux before brightening. -->
+     <!-- With the fusion sensor subtracting screen emission, residual content
+          leakage is only a few percent of ambient in the indoor bands (measured
+          ~+3 lux at DBV ~730), so the pre-fusion 250%/150% raw-ALS bands are no
+          longer needed and would block genuine brightening (a dim lamp turning
+          on, 3 to 9 lux, must pass). Small absolute wobbles at night are
+          rejected by the ambientBrightnessChangeThresholds minimums in the DDC
+          (displayconfig.xml), not by these percentages. -->
      <integer-array name="config_ambientBrighteningThresholds">
-     <item>2500</item> <!-- 0 - 50 -->
-     <item>1500</item> <!-- 50 - 150 -->
-     <item>1200</item> <!-- 150 - 500 -->
-     <item>1000</item> <!-- 500 - 1000 -->
-     <item>800</item>  <!-- 1000 - 2000 -->
-     <item>500</item>  <!-- 2000 - 4000 -->
-     <item>400</item>  <!-- 4000+ -->
+     <item>1000</item> <!-- 0 - 50 -->
+     <item>500</item>  <!-- 50 - 150 -->
+     <item>400</item>  <!-- 150 - 500 -->
+     <item>300</item>  <!-- 500 - 1000 -->
+     <item>300</item>  <!-- 1000 - 2000 -->
+     <item>300</item>  <!-- 2000 - 4000 -->
+     <item>300</item>  <!-- 4000+ -->
      </integer-array>
 
     <!-- Array of hysteresis constraint values for darkening, represented as tenths of a
@@ -312,12 +313,12 @@
          lux * (1.0f - CONSTRAINT_VALUE). When the current lux is lower than this threshold,
          the screen brightness is recalculated. See the config_ambientThresholdLevels
          description for how the constraint value is chosen. -->
-    <!-- Darkening is the inverse leak: bright content above the under-display ALS
-         inflates the reading, and switching to a dark app removes that inflation,
-         which reads as a lux drop with no real ambient change. The old 0.1%/5%
-         constraints in the low bands meant any such drop dimmed the screen.
+    <!-- Darkening is the inverse leak: switching to a dark app removes the
+         panel's own contribution from the reading. The fusion sensor removes
+         most of it, but small false drops remain at night; those are rejected
+         by the darkening minimum in the DDC ambientBrightnessChangeThresholds.
          Real darkening (lights off, entering a dark room) is -80% or more and
-         still passes these. -->
+         still passes these percentages. -->
     <integer-array name="config_ambientDarkeningThresholds">
         <item>400</item>  <!--     0 - 50    -->
         <item>500</item>  <!--    50 - 150   -->
