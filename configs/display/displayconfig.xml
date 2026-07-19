@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+     Display device config for the AA551 panel (installed as
+     vendor/etc/displayconfig/display_id_4630946607878435459.xml).
+
+     Split of responsibilities:
+     - This file owns what config.xml cannot express: the physical
+       backlight-to-nits map (incl. the HBM range) and the HBM/HDR block.
+     - The auto-brightness policy (lux curve, debounce, hysteresis thresholds)
+       stays in overlay/OPlusFrameworksResTarget config.xml; DisplayDeviceConfig
+       falls back to those resources because this file deliberately has no
+       <autoBrightness>/<*ChangeThresholds>/<screenBrightnessRamp*> elements.
+
+     The brightness map is the same 22-point sampling of the stock OOS
+     display_brightness_config_P_3.xml DBV-to-nits table already used by the
+     overlay arrays (backlight b in 1..255 -> value (b-1)/254), plus the knee
+     at 0.8: stock level 8191/10239 = 811.12 nits is the normal-mode maximum;
+     0.8..1.0 is the linear sunshine/HBM region up to 1594 nits. Any edit here
+     must keep the two copies in sync.
+-->
 <displayConfiguration>
     <densityMapping>
         <density>
@@ -7,4 +26,166 @@
             <density>450</density>
         </density>
     </densityMapping>
+    <screenBrightnessMap>
+        <point>
+            <value>0.000000</value>
+            <nits>1.98</nits>
+        </point>
+        <point>
+            <value>0.003937</value>
+            <nits>2.03</nits>
+        </point>
+        <point>
+            <value>0.007874</value>
+            <nits>2.11</nits>
+        </point>
+        <point>
+            <value>0.011811</value>
+            <nits>2.21</nits>
+        </point>
+        <point>
+            <value>0.019685</value>
+            <nits>2.51</nits>
+        </point>
+        <point>
+            <value>0.027559</value>
+            <nits>2.95</nits>
+        </point>
+        <point>
+            <value>0.043307</value>
+            <nits>4.32</nits>
+        </point>
+        <point>
+            <value>0.062992</value>
+            <nits>5.74</nits>
+        </point>
+        <point>
+            <value>0.094488</value>
+            <nits>8.99</nits>
+        </point>
+        <point>
+            <value>0.133858</value>
+            <nits>16.37</nits>
+        </point>
+        <point>
+            <value>0.192913</value>
+            <nits>34.83</nits>
+        </point>
+        <point>
+            <value>0.271654</value>
+            <nits>75.02</nits>
+        </point>
+        <point>
+            <value>0.350394</value>
+            <nits>132.21</nits>
+        </point>
+        <point>
+            <value>0.429134</value>
+            <nits>206.63</nits>
+        </point>
+        <point>
+            <value>0.507874</value>
+            <nits>300.35</nits>
+        </point>
+        <point>
+            <value>0.586614</value>
+            <nits>410.38</nits>
+        </point>
+        <point>
+            <value>0.665354</value>
+            <nits>541.14</nits>
+        </point>
+        <point>
+            <value>0.744094</value>
+            <nits>693.62</nits>
+        </point>
+        <point>
+            <value>0.800000</value>
+            <nits>811.12</nits>
+        </point>
+        <point>
+            <value>0.822835</value>
+            <nits>900.58</nits>
+        </point>
+        <point>
+            <value>0.881890</value>
+            <nits>1131.74</nits>
+        </point>
+        <point>
+            <value>0.940945</value>
+            <nits>1362.90</nits>
+        </point>
+        <point>
+            <value>1.000000</value>
+            <nits>1594.06</nits>
+        </point>
+    </screenBrightnessMap>
+
+    <!-- transitionPoint 0.8 = 811 nits = stock OOS normal-mode maximum. Above it:
+         sunshine HBM under auto-brightness needs ambient lux >= minimumLux
+         (stock hbm_lux_table 31 exits sunshine at 20000 lux; our lux curve only
+         requests >811 nits above 40000 lux, which reproduces stock's 40k-enter/
+         20k-exit hysteresis). Zeroed timing = no time budget, and keeps the
+         manual slider's full 1594-nit range that shipped in 4.6.
+         minimumHdrPercentOfScreen 0.5 (AOSP default): HDR boost only when an
+         HDR/UltraHDR layer covers at least half the screen, so feed images on
+         Instagram/X don't trigger it but fullscreen video does. -->
+    <highBrightnessMode enabled="true">
+        <transitionPoint>0.8</transitionPoint>
+        <minimumLux>20000</minimumLux>
+        <timing>
+            <timeWindowSecs>0</timeWindowSecs>
+            <timeMaxSecs>0</timeMaxSecs>
+            <timeMinSecs>0</timeMinSecs>
+        </timing>
+        <minimumHdrPercentOfScreen>0.5</minimumHdrPercentOfScreen>
+        <!-- HDR panel brightness = current SDR nits x ratio, clamped to 1594.
+             Tapered so dark-room HDR stays comfortable (4x of a low SDR base)
+             and the product stays monotonic up to panel max at the 811-nit
+             normal maximum (811 x 1.965 = 1594). -->
+        <sdrHdrRatioMap>
+            <point>
+                <sdrNits>2.0</sdrNits>
+                <hdrRatio>4.0</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>100.0</sdrNits>
+                <hdrRatio>4.0</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>200.0</sdrNits>
+                <hdrRatio>3.4</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>300.0</sdrNits>
+                <hdrRatio>3.0</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>500.0</sdrNits>
+                <hdrRatio>2.4</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>700.0</sdrNits>
+                <hdrRatio>2.1</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>811.12</sdrNits>
+                <hdrRatio>1.965</hdrRatio>
+            </point>
+        </sdrHdrRatioMap>
+    </highBrightnessMode>
+
+    <hdrBrightnessConfig>
+        <brightnessMap>
+            <point>
+                <first>100000</first>
+                <second>1.0</second>
+            </point>
+        </brightnessMap>
+        <brightnessIncreaseDebounceMillis>4000</brightnessIncreaseDebounceMillis>
+        <brightnessDecreaseDebounceMillis>4000</brightnessDecreaseDebounceMillis>
+        <screenBrightnessRampIncrease>0.05</screenBrightnessRampIncrease>
+        <screenBrightnessRampDecrease>0.05</screenBrightnessRampDecrease>
+        <allowInLowPowerMode>false</allowInLowPowerMode>
+    </hdrBrightnessConfig>
 </displayConfiguration>

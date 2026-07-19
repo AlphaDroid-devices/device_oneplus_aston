@@ -55,7 +55,10 @@
          reading. 2s rides out transient white flashes (scrolling, page loads)
          while still adapting to a real ambient change. -->
     <integer name="config_autoBrightnessBrighteningLightDebounce">2000</integer>
-    <integer name="config_autoBrightnessDarkeningLightDebounce">750</integer>
+    <!-- Darkening debounce raised for the same reason: switching to a dark app
+         removes the panel's own leak from the lux reading and looks like the room
+         got darker. 1.5s skips transition animations and short dark flashes. -->
+    <integer name="config_autoBrightnessDarkeningLightDebounce">1500</integer>
 
     <!-- The maximum range of gamma adjustment possible using the screen
          auto-brightness adjustment setting. -->
@@ -86,12 +89,16 @@
          backlight values for lux levels between these control points.
 
          Must be overridden in platform specific overlays -->
-    <!-- Lux control points and target nits taken from stock OOS
-         display_brightness_config_common.xml lux_table id="31" ("Waffle" = aston),
-         extended past 40000 lux following stock's hbm_lux_table steps.
-         These values are true panel nits: they only produce correct output because
-         config_screenBrightnessNits below describes the panel's real (non-linear)
-         DBV-to-nits response. -->
+     <!-- Lux control points and target nits taken verbatim from stock OOS
+         display_brightness_config_common.xml lux_table id="33" ("Aston"),
+         the panel-specific table for this device (AA551). The HBM range
+         (above 15000 lux) is appended from hbm_lux_table id="33".
+         These values are true panel nits: they only produce correct output
+         because config_screenBrightnessNits describes the panel's real
+         (non-linear) DBV-to-nits response.
+         Now safe to use stock values verbatim because the Fusion sensor
+         compensates screen-content pollution before lux reaches the
+         AutomaticBrightnessController. -->
     <integer-array name="config_autoBrightnessLevels">
         <item>2</item>
         <item>4</item>
@@ -144,6 +151,11 @@
          This array should have size one greater than the size of the config_autoBrightnessLevels
          array. The brightness values must be non-negative and non-decreasing. This must be
          overridden in platform specific overlays -->
+     <!-- Nit targets from stock lux_table id="33" (Aston) +
+          hbm_lux_table id="33" for the HBM range (> 15000 lux).
+          HBM nits beyond 15000 lux follow the hbm_lux_table id="33"
+          enter thresholds: 20000→650, 30000→720, 40000→800.
+          Values above 40000 lux linearly extrapolated to panel max. -->
      <array name="config_autoBrightnessDisplayValuesNits">
      <item>2.5</item>    <!-- 0 - 2 -->
      <item>7.5</item>    <!-- 2 - 4 -->
@@ -177,9 +189,9 @@
      <item>391.0</item>  <!-- 4000 - 7000 -->
      <item>500.0</item>  <!-- 7000 - 10000 -->
      <item>545.0</item>  <!-- 10000 - 15000 -->
-     <item>600.0</item>  <!-- 15000 - 20000 -->
-     <item>650.0</item>  <!-- 20000 - 30000 -->
-     <item>720.0</item>  <!-- 30000 - 40000 -->
+     <item>600.0</item>  <!-- 15000 - 20000 (hbm_lux_table id=33: enter 20000) -->
+     <item>650.0</item>  <!-- 20000 - 30000 (hbm_lux_table id=33: enter 30000) -->
+     <item>720.0</item>  <!-- 30000 - 40000 (hbm_lux_table id=33: enter 40000) -->
      <item>800.0</item>  <!-- 40000 - 65000 -->
      <item>900.0</item>  <!-- 65000 - 90000 -->
      <item>1000.0</item> <!-- 90000+ -->
@@ -281,14 +293,16 @@
      <!-- Mid-lux brightening constraints are kept high because residual
           screen-content leakage through the under-display ALS lands mostly in the
           50-2000 lux band; real ambient changes (walking outside) exceed these
-          easily. -->
+          easily. A full-white page leaks up to roughly +100% of ambient in the
+          indoor bands, so every band up to 2000 lux must require more than a
+          doubling of lux before brightening. -->
      <integer-array name="config_ambientBrighteningThresholds">
      <item>2500</item> <!-- 0 - 50 -->
-     <item>1200</item> <!-- 50 - 150 -->
-     <item>800</item>  <!-- 150 - 500 -->
-     <item>600</item>  <!-- 500 - 1000 -->
-     <item>500</item>  <!-- 1000 - 2000 -->
-     <item>400</item>  <!-- 2000 - 4000 -->
+     <item>1500</item> <!-- 50 - 150 -->
+     <item>1200</item> <!-- 150 - 500 -->
+     <item>1000</item> <!-- 500 - 1000 -->
+     <item>800</item>  <!-- 1000 - 2000 -->
+     <item>500</item>  <!-- 2000 - 4000 -->
      <item>400</item>  <!-- 4000+ -->
      </integer-array>
 
@@ -298,12 +312,18 @@
          lux * (1.0f - CONSTRAINT_VALUE). When the current lux is lower than this threshold,
          the screen brightness is recalculated. See the config_ambientThresholdLevels
          description for how the constraint value is chosen. -->
+    <!-- Darkening is the inverse leak: bright content above the under-display ALS
+         inflates the reading, and switching to a dark app removes that inflation,
+         which reads as a lux drop with no real ambient change. The old 0.1%/5%
+         constraints in the low bands meant any such drop dimmed the screen.
+         Real darkening (lights off, entering a dark room) is -80% or more and
+         still passes these. -->
     <integer-array name="config_ambientDarkeningThresholds">
-        <item>1</item>    <!--     0 - 50    -->
-        <item>50</item>   <!--    50 - 150   -->
-        <item>450</item>  <!--   115 - 500   -->
-        <item>500</item>  <!--   500 - 1000  -->
-        <item>500</item>  <!--  1000 - 2000  -->
+        <item>400</item>  <!--     0 - 50    -->
+        <item>500</item>  <!--    50 - 150   -->
+        <item>600</item>  <!--   150 - 500   -->
+        <item>600</item>  <!--   500 - 1000  -->
+        <item>600</item>  <!--  1000 - 2000  -->
         <item>500</item>  <!--  2000 - 4000  -->
         <item>500</item>  <!--     4000+     -->
     </integer-array>
