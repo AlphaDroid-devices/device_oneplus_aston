@@ -68,6 +68,12 @@
             android:title="@string/hbm_title"
             android:summary="@string/hbm_summary" />
 
+        <SwitchPreferenceCompat
+            android:key="aod_high_brightness"
+            android:title="@string/aod_high_brightness_title"
+            android:summary="@string/aod_high_brightness_summary"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

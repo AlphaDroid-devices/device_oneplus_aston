@@ -41,6 +41,7 @@ import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 import java.util.Arrays;
 
 import org.lineageos.device.settings.Constants;
+import org.lineageos.device.settings.display.AodBrightnessController;
 import org.lineageos.device.settings.display.DisplayModeController;
 import org.lineageos.device.settings.display.HbmController;
 import org.lineageos.device.settings.display.PwmController;
@@ -58,10 +59,12 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
 
     private SwitchPreferenceCompat mOnePulsePWMSwitch;
     private SwitchPreferenceCompat mHbmSwitch;
+    private SwitchPreferenceCompat mAodHighBrightnessSwitch;
 
     private HbmController mHbmController;
     private PwmController mPwmController;
     private DisplayModeController mDisplayModeController;
+    private AodBrightnessController mAodBrightnessController;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -70,6 +73,7 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
         mHbmController = HbmController.getInstance(getContext());
         mPwmController = PwmController.getInstance(getContext());
         mDisplayModeController = DisplayModeController.getInstance(getContext());
+        mAodBrightnessController = AodBrightnessController.getInstance(getContext());
 
         mOnePulsePWMSwitch = (SwitchPreferenceCompat) findPreference(Constants.KEY_ONEPULSE_PWM);
         if (FileUtils.isFileWritable(Constants.NODE_ONEPULSE_PWM)) {
@@ -87,6 +91,21 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
             mHbmSwitch.setOnPreferenceChangeListener(this);
         } else {
             mHbmSwitch.setEnabled(false);
+        }
+
+        mAodHighBrightnessSwitch =
+                (SwitchPreferenceCompat) findPreference(Constants.KEY_AOD_HIGH_BRIGHTNESS);
+        if (mAodHighBrightnessSwitch != null) {
+            if (FileUtils.isFileWritable(Constants.NODE_AOD_LIGHT_MODE)
+                    || FileUtils.fileExists(Constants.NODE_AOD_LIGHT_MODE)) {
+                mAodHighBrightnessSwitch.setEnabled(true);
+                mAodHighBrightnessSwitch.setChecked(
+                        mAodBrightnessController.isHighBrightnessEnabled());
+                mAodHighBrightnessSwitch.setOnPreferenceChangeListener(this);
+            } else {
+                mAodHighBrightnessSwitch.setEnabled(false);
+                removePref(mAodHighBrightnessSwitch);
+            }
         }
 
         // Sync UI state based on current HBM/PWM state
@@ -208,6 +227,14 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
                     Log.i(TAG, "HBM disabled");
                 }
             }
+            return true;
+        } else if (preference == mAodHighBrightnessSwitch) {
+            boolean high = (Boolean) newValue;
+            if (!mAodBrightnessController.setHighBrightness(high)) {
+                Log.w(TAG, "Failed to set AOD high brightness=" + high);
+                // Preference still updated — restore will re-apply when the node is ready.
+            }
+            Log.i(TAG, "AOD high brightness " + (high ? "enabled (50 nits)" : "disabled (10 nits)"));
             return true;
         }
 

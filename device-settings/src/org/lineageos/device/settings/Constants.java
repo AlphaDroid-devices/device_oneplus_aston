@@ -108,6 +108,16 @@ public class Constants {
     public static final String NODE_HBM = "/sys/kernel/oplus_display/hbm_max";
     public static final String KEY_HBM = "hbm_max";
 
+    /**
+     * AOD brightness (stock binary levels via OFP):
+     * write 0 = high (~50 nits), 1 = low (~10 nits). Preference
+     * {@link #KEY_AOD_HIGH_BRIGHTNESS} is true when high is selected;
+     * default is false (10 nits), matching ColorOS.
+     */
+    public static final String NODE_AOD_LIGHT_MODE =
+            "/sys/kernel/oplus_display/aod_light_mode_set";
+    public static final String KEY_AOD_HIGH_BRIGHTNESS = "aod_high_brightness";
+
     /** Panel test-TE counter: real DDIC self-refresh rate (LTPO). Write "1" to
      *  enable the irq (done at boot by DeviceSettingsService); reads return the
      *  measured rate, or 0 until two TE pulses have been observed. Consumed by the
