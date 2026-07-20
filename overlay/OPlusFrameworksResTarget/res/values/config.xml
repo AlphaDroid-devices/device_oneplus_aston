@@ -42,7 +42,10 @@
     <!-- Screen brightness used to dim the screen while dozing in a very low power state.
          May be less than the minimum allowed brightness setting
          that can be set by the user. -->
-    <item type="dimen" name="config_screenBrightnessDozeFloat">0.00366300366</item>
+    <!-- ~10 nits on the panel's real DBV-to-nits curve (config_screenBrightnessNits):
+         0.1034 * 255 = bl 26.37, interpolating 8.99 nits (bl 25) -> 16.37 nits (bl 35).
+         Matches the DeviceSettings AOD default (10 nits). Stock value 0.00366 was ~1.9 nits. -->
+    <item type="dimen" name="config_screenBrightnessDozeFloat">0.1034066</item>
 
     <!-- Stability requirements in milliseconds for accepting a new brightness level.  This is used
          for debouncing the light sensor.  Different constants are used to debounce the light sensor
