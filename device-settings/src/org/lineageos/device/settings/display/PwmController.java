@@ -19,6 +19,13 @@ public class PwmController {
     private final Context mContext;
     private final SharedPreferences mSharedPrefs;
 
+    /**
+     * Panel settle after HBM exit / PWM drive-mode switch. HBM EXIT rewrites gamma
+     * and 0x51; stacking DC↔1P on top within a few ms produces crazy colors and
+     * peak brightness. ~2 frames + ADFR kickoff is enough; dmesg showed ~11 ms was not.
+     */
+    static final long PANEL_MODE_SETTLE_MS = 150;
+
     private PwmController(Context context) {
         mContext = context.getApplicationContext();
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -63,11 +70,15 @@ public class PwmController {
             return false;
         }
 
-        // PWM has priority: disable HBM if it's active
+        // PWM has priority: tear HBM down fully, then wait before DC→1P.
         HbmController hbmController = HbmController.getInstance(mContext);
         if (hbmController.isHbmEnabled()) {
             Log.i(TAG, "HBM is active, disabling it (PWM has priority)");
-            hbmController.disableHbm();
+            if (!hbmController.disableHbm()) {
+                Log.w(TAG, "Failed to disable HBM before enabling PWM");
+                return false;
+            }
+            settlePanel("after HBM off, before PWM on");
         }
 
         setPwm(true);
@@ -81,7 +92,19 @@ public class PwmController {
         }
 
         setPwm(false);
+        // Kernel re-applies BL so 1P→DC runs now; settle before a following HBM on.
+        settlePanel("after PWM off");
         return true;
+    }
+
+    static void settlePanel(String reason) {
+        try {
+            Log.i(TAG, "Panel settle " + PANEL_MODE_SETTLE_MS + "ms (" + reason + ")");
+            Thread.sleep(PANEL_MODE_SETTLE_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            Log.w(TAG, "Panel settle interrupted (" + reason + ")");
+        }
     }
 
     private void setPwm(boolean enable) {
