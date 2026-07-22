@@ -6,11 +6,13 @@
  *
  * Business rules:
  * - PWM has priority over HBM
- * - Enabling PWM will disable HBM automatically, then settle before DC→1P
- * - HBM cannot be enabled while PWM is active (must disable PWM first; settle runs)
+ * - Enabling PWM will disable HBM automatically
+ * - HBM cannot be enabled while PWM is active (must disable PWM first)
  * - HBM locks refresh rate to 120Hz
  * - Refresh rate tile should be disabled while HBM is active
  * - All mode mutations are synchronized so tile spam cannot interleave HBM/PWM cmds
+ * - PanelModeSettle: every enter path waits out SETTLE_MS since the last mode
+ *   change (covers two-tap HBM-off tile then PWM-on, not only in-line teardown)
  */
 package org.lineageos.device.settings.display;
 

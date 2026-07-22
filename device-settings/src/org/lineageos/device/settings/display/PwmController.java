@@ -19,13 +19,6 @@ public class PwmController {
     private final Context mContext;
     private final SharedPreferences mSharedPrefs;
 
-    /**
-     * Panel settle after HBM exit / PWM drive-mode switch. HBM EXIT rewrites gamma
-     * and 0x51; stacking DC↔1P on top within a few ms produces crazy colors and
-     * peak brightness. ~2 frames + ADFR kickoff is enough; dmesg showed ~11 ms was not.
-     */
-    static final long PANEL_MODE_SETTLE_MS = 150;
-
     private PwmController(Context context) {
         mContext = context.getApplicationContext();
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -56,8 +49,11 @@ public class PwmController {
         boolean wanted = mSharedPrefs.getBoolean(Constants.KEY_ONEPULSE_PWM, false);
         if (wanted && !isPwmEnabled()) {
             if (FileUtils.isFileWritable(Constants.NODE_ONEPULSE_PWM)) {
-                setPwm(true);
-                Log.i(TAG, "Restored PWM setting after boot");
+                if (setPwm(true)) {
+                    Log.i(TAG, "Restored PWM setting after boot");
+                } else {
+                    Log.w(TAG, "Failed to restore PWM setting after boot");
+                }
             } else {
                 Log.w(TAG, "PWM node is not writable, cannot restore setting");
             }
@@ -70,7 +66,8 @@ public class PwmController {
             return false;
         }
 
-        // PWM has priority: tear HBM down fully, then wait before DC→1P.
+        // PWM has priority: tear HBM down fully, then wait out any recent mode change
+        // (including a two-tap HBM-off tile → PWM-on that skips the in-line disable).
         HbmController hbmController = HbmController.getInstance(mContext);
         if (hbmController.isHbmEnabled()) {
             Log.i(TAG, "HBM is active, disabling it (PWM has priority)");
@@ -78,10 +75,13 @@ public class PwmController {
                 Log.w(TAG, "Failed to disable HBM before enabling PWM");
                 return false;
             }
-            settlePanel("after HBM off, before PWM on");
         }
 
-        setPwm(true);
+        PanelModeSettle.awaitIfNeeded("before PWM on");
+        if (!setPwm(true)) {
+            return false;
+        }
+        PanelModeSettle.mark();
         return true;
     }
 
@@ -91,25 +91,31 @@ public class PwmController {
             return false;
         }
 
-        setPwm(false);
-        // Kernel re-applies BL so 1P→DC runs now; settle before a following HBM on.
-        settlePanel("after PWM off");
+        if (!setPwm(false)) {
+            return false;
+        }
+        // Kernel re-applies BL so 1P→DC runs now; mark so a following HBM on waits.
+        PanelModeSettle.mark();
         return true;
     }
 
-    static void settlePanel(String reason) {
-        try {
-            Log.i(TAG, "Panel settle " + PANEL_MODE_SETTLE_MS + "ms (" + reason + ")");
-            Thread.sleep(PANEL_MODE_SETTLE_MS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            Log.w(TAG, "Panel settle interrupted (" + reason + ")");
+    /**
+     * Write onepulse sysfs and only persist the pref when the node matches.
+     * Kernel can refuse (e.g. hbm_max still active) with -EFAULT; treat that as failure.
+     */
+    private boolean setPwm(boolean enable) {
+        String want = enable ? "1" : "0";
+        if (!FileUtils.writeLine(Constants.NODE_ONEPULSE_PWM, want)) {
+            Log.w(TAG, "PWM sysfs write failed (enable=" + enable + ")");
+            return false;
         }
-    }
-
-    private void setPwm(boolean enable) {
-        FileUtils.writeLine(Constants.NODE_ONEPULSE_PWM, enable ? "1" : "0");
+        String got = FileUtils.readLineTrimmed(Constants.NODE_ONEPULSE_PWM);
+        if (got == null || !want.equals(got)) {
+            Log.w(TAG, "PWM node mismatch after write: want=" + want + " got=" + got);
+            return false;
+        }
         mSharedPrefs.edit().putBoolean(Constants.KEY_ONEPULSE_PWM, enable).commit();
         Log.i(TAG, "PWM set to: " + enable);
+        return true;
     }
 }
