@@ -1,0 +1,4 @@
+# The lineage-libperfmgr power HAL connects to the thermal HAL to drive
+# thermal-aware ADPF (see PowerHAL thermal state listener). Without this it
+# logs "Thermal HAL service not declared" and skips the listener.
+allow hal_power_default hal_thermal_service:service_manager find;
