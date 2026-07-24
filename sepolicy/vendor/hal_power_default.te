@@ -1,4 +1,12 @@
 # The lineage-libperfmgr power HAL connects to the thermal HAL to drive
-# thermal-aware ADPF (see PowerHAL thermal state listener). Without this it
-# logs "Thermal HAL service not declared" and skips the listener.
-allow hal_power_default hal_thermal_service:service_manager find;
+# thermal-aware ADPF (ThermalStateListener → IThermal/default).
+#
+# Do NOT use a raw:
+#   allow … hal_thermal_service:service_manager find;
+# That violates the platform neverallow in system/sepolicy/private/hal_thermal.te
+# (hal_attribute_service). Clients must use:
+hal_client_domain(hal_power_default, hal_thermal)
+
+# ADPF worker threads (adpf_handler0) renice/set scheduling on app threads.
+# Matches hardware/google/pixel-sepolicy/power-libperfmgr/hal_power_default.te.
+allow hal_power_default self:capability sys_nice;
