@@ -63,6 +63,11 @@
          got darker. 1.5s skips transition animations and short dark flashes. -->
     <integer name="config_autoBrightnessDarkeningLightDebounce">4000</integer>
 
+    <!-- Drop short-term user brightness bias when the display turns on again or when the user
+         re-enables auto-brightness. Avoids a prior slider tweak sticking across lock/unlock or
+         AB off→on in the same ambient. -->
+    <bool name="config_autoBrightnessShortTermModelForceReset">true</bool>
+
     <!-- The maximum range of gamma adjustment possible using the screen
          auto-brightness adjustment setting. -->
     <fraction name="config_autoBrightnessAdjustmentMaxGamma">100%</fraction>
