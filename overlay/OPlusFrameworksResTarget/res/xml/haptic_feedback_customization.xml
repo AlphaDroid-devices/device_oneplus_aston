@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The AlphaDroid Project
+     SPDX-License-Identifier: Apache-2.0
+
+     Per-gesture haptics for aston (OnePlus 12R / Ace 3).
+
+     AOSP collapses 28 HapticFeedbackConstants onto 7 prebaked effects - nine of
+     them share EFFECT_TICK alone, including keyboard press and release. ColorOS
+     instead assigns a distinct effect per gesture out of 402 (see stock
+     my_product/etc/vibrator/effect_waveform.xml), which is most of why stock
+     reads as richer even though both stacks drive the same LRA at the same
+     7700 mV through the same FIFO path.
+
+     This file recovers the differentiation. It changes which gesture gets which
+     feel; it does not, and cannot, make any single tap stronger - the 809 pack's
+     short waveforms all sit between RMS 66 and 81 and we already use the top of
+     that band.
+
+     Palette (measured from the ODM 809 def bins, see ~/workdir/aston-haptics.md):
+
+       primitive click       wf 2    18.4 ms  rms 69.7
+       primitive thud        wf 3    37.7 ms  rms 49.7
+       primitive spin        wf 107  96.1 ms  five decaying lobes
+       primitive quick_rise  wf 4    15.8 ms  rms 71.8, peak at 71%
+       primitive slow_rise   wf 5    60.6 ms  rms 33.0, peak at 83%
+       primitive quick_fall  wf 303  10.3 ms  rms 50.5, immediate decay
+       primitive tick        wf 14    7.5 ms  rms 35.9, lightest
+       predefined click / tick / thud / pop / heavy_click / double_click /
+                  texture_tick  -> the prebaked table
+
+     NOTE: primitive "low_tick" is deliberately unused. It is CompositePrimitive
+     id 8, which only exists from vibrator AIDL V2, and the HAL links V1.
+-->
+
+<haptic-feedback-constants>
+
+    <!-- 0 LONG_PRESS (was HEAVY_CLICK, shared with DRAG_START).
+         ColorOS ships a dedicated input_method_long_press_effect. Ramp into the
+         hit so the press reads as committing rather than just firing. -->
+    <constant id="0">
+        <vibration-effect>
+            <primitive-effect name="quick_rise" scale="0.6"/>
+            <primitive-effect name="click" scale="1.0" delayMs="10"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 3 KEYBOARD_TAP == KEYBOARD_PRESS (was TICK, shared with release).
+         Stock's emulation_keyboard_down is a full-strength short hit. -->
+    <constant id="3">
+        <vibration-effect>
+            <predefined-effect name="click"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 7 KEYBOARD_RELEASE (was TICK - identical to the press).
+         Stock ships emulation_keyboard_up as a separate, lighter, faster-decaying
+         effect. Typing gains a press/release texture it simply did not have. -->
+    <constant id="7">
+        <vibration-effect>
+            <primitive-effect name="quick_fall" scale="0.55"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 8 VIRTUAL_KEY_RELEASE (was TICK). Same argument as keyboard release. -->
+    <constant id="8">
+        <vibration-effect>
+            <primitive-effect name="quick_fall" scale="0.5"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 12 GESTURE_START (was CLICK) / 13 GESTURE_END (was TICK).
+         A gesture has a direction; rise on engage, fall on release. -->
+    <constant id="12">
+        <vibration-effect>
+            <primitive-effect name="quick_rise" scale="0.7"/>
+        </vibration-effect>
+    </constant>
+    <constant id="13">
+        <vibration-effect>
+            <primitive-effect name="quick_fall" scale="0.7"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 16 CONFIRM (was a single CLICK).
+         Two ascending taps read as "accepted" without being a DOUBLE_CLICK. -->
+    <constant id="16">
+        <vibration-effect>
+            <primitive-effect name="click" scale="0.7"/>
+            <primitive-effect name="click" scale="1.0" delayMs="45"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 17 REJECT (was DOUBLE_CLICK, i.e. wf 122 at 100 ms).
+         Descending and blunt: refusal should not feel like confirmation. -->
+    <constant id="17">
+        <vibration-effect>
+            <primitive-effect name="thud" scale="1.0"/>
+            <primitive-effect name="thud" scale="0.6" delayMs="60"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 20 SCROLL_LIMIT (was CLICK, same as ordinary item focus).
+         Hitting the end of a list should feel like a wall, not a tap. Stock uses
+         effect_other_strength_level_bar_edge here. -->
+    <constant id="20">
+        <vibration-effect>
+            <primitive-effect name="thud" scale="1.0"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 21 TOGGLE_ON / 22 TOGGLE_OFF.
+         AOSP's default TOGGLE_OFF asks for PRIMITIVE_LOW_TICK, which needs AIDL
+         V2 and therefore silently falls back here. Give both an explicit
+         direction instead. -->
+    <constant id="21">
+        <vibration-effect>
+            <primitive-effect name="quick_rise" scale="0.8"/>
+        </vibration-effect>
+    </constant>
+    <constant id="22">
+        <vibration-effect>
+            <primitive-effect name="quick_fall" scale="0.8"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 23 GESTURE_THRESHOLD_ACTIVATE (was TICK, shared with plain scrolling).
+         The back gesture crossing its threshold is a commit and should be
+         unambiguous against the scroll ticks around it. -->
+    <constant id="23">
+        <vibration-effect>
+            <primitive-effect name="click" scale="0.85"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 24 GESTURE_THRESHOLD_DEACTIVATE: backing out is not a commit. -->
+    <constant id="24">
+        <vibration-effect>
+            <primitive-effect name="tick" scale="0.7"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 25 DRAG_START (was HEAVY_CLICK, shared with LONG_PRESS).
+         Picking something up is a rise, not a thump. -->
+    <constant id="25">
+        <vibration-effect>
+            <primitive-effect name="quick_rise" scale="0.75"/>
+        </vibration-effect>
+    </constant>
+
+    <!-- 11 DRAG_CROSSING (was TICK): high frequency while dragging, keep light. -->
+    <constant id="11">
+        <vibration-effect>
+            <primitive-effect name="tick" scale="0.6"/>
+        </vibration-effect>
+    </constant>
+
+</haptic-feedback-constants>
