@@ -17,6 +17,19 @@
      short waveforms all sit between RMS 66 and 81 and we already use the top of
      that band.
 
+     MEASURED REACH (dumpsys vibrator_manager, 2026-07-28, this device):
+     only entries reached through performHapticFeedback() take effect. Roughly
+     60% of vibrations here are direct VibratorHelper.vibrate() calls from
+     SystemUI (they log "reason: null") and this file has no influence on them:
+
+       QS tile toggle  -> hardcoded [CLICK 1.0, CLICK 1.0 @52ms], NOT constant 21/22
+       brightness/volume slider -> Primitive=TICK swept 0.60..0.83
+       recents carousel         -> SEGMENT_FREQUENT_TICK path
+
+     Confirmed live from this file: constant 0 (long press) and constant 23
+     (back-gesture threshold). The rest are correct but only fire if an app or
+     IME actually requests them - keep them, they cost nothing when unused.
+
      Palette (measured from the ODM 809 def bins, see ~/workdir/aston-haptics.md):
 
        primitive click       wf 2    18.4 ms  rms 69.7
@@ -45,17 +58,17 @@
         </vibration-effect>
     </constant>
 
-    <!-- 3 KEYBOARD_TAP == KEYBOARD_PRESS (was TICK, shared with release).
-         Stock's emulation_keyboard_down is a full-strength short hit. -->
-    <constant id="3">
-        <vibration-effect>
-            <predefined-effect name="click"/>
-        </vibration-effect>
-    </constant>
+    <!-- 3 KEYBOARD_TAP == KEYBOARD_PRESS is deliberately NOT overridden.
+         HapticFeedbackVibrationProvider.getKeyboardVibration() already returns
+         EFFECT_CLICK for it whenever config_keyboardHapticFeedbackFixedAmplitude
+         is -1, which is the AOSP default and what we ship. An entry here would
+         emit the identical Prebaked=CLICK, so it would be pure decoration.
 
-    <!-- 7 KEYBOARD_RELEASE (was TICK - identical to the press).
-         Stock ships emulation_keyboard_up as a separate, lighter, faster-decaying
-         effect. Typing gains a press/release texture it simply did not have. -->
+         7 KEYBOARD_RELEASE. Stock ships emulation_keyboard_up (wf 303) as a
+         separate, lighter, faster-decaying partner to keyboard_down, and AOSP
+         gives release its own constant - but Gboard never raises it: 20 key
+         presses produced 20x constant=3 and zero constant=7. Kept because it is
+         free and IMEs that do emit it (AOSP keyboard, HeliBoard) get the split. -->
     <constant id="7">
         <vibration-effect>
             <primitive-effect name="quick_fall" scale="0.55"/>
@@ -112,7 +125,10 @@
     <!-- 21 TOGGLE_ON / 22 TOGGLE_OFF.
          AOSP's default TOGGLE_OFF asks for PRIMITIVE_LOW_TICK, which needs AIDL
          V2 and therefore silently falls back here. Give both an explicit
-         direction instead. -->
+         direction instead.
+         NB: QS tiles do NOT use these - SystemUI vibrates directly with a
+         hardcoded [CLICK, CLICK @52ms]. These serve apps that call
+         performHapticFeedback(TOGGLE_ON/OFF) properly. -->
     <constant id="21">
         <vibration-effect>
             <primitive-effect name="quick_rise" scale="0.8"/>
