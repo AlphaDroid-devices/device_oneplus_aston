@@ -95,11 +95,13 @@ PRODUCT_COPY_FILES += \
 # Touch
 $(call soong_config_set_bool,OPLUS_LINEAGE_TOUCH_HAL,USE_OPLUSTOUCH,true)
 
-# Vibrator
+# Vibrator — source QTI/oplus HAL with 12R/Ace3 stock-tuned effect streams
+# (project 809 def bins → AOSP Effect IDs, incl. TEXTURE_TICK for back gesture).
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.vibrator.service.oplus
 
 $(call soong_config_set_bool,OPLUS_LINEAGE_VIBRATOR_HAL,USE_EFFECT_STREAM,true)
+$(call soong_config_set,OPLUS_LINEAGE_VIBRATOR_HAL,INCLUDE_DIR,$(LOCAL_PATH)/vibrator/effect)
 
 # Inherit from the common OEM chipset makefile.
 $(call inherit-product, device/oneplus/sm8550-common/common.mk)
