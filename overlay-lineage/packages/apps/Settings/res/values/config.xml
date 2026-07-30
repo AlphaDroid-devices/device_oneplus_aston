@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+
+    <!-- The touchpanel driver reports a unique keycode per gesture
+         (KEY_GESTURE_START + type), so the generic gesture support works. -->
+    <bool name="config_supportsTouchscreenGestures">true</bool>
+
+</resources>
