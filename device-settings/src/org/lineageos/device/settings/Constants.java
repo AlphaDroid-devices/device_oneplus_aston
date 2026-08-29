@@ -106,6 +106,27 @@ public class Constants {
     public static final String KEY_BYPASS_CHARGING_TARGET = "bypass_charging_target";
     public static final String KEY_BYPASS_CHARGING_APPS = "bypass_charging_apps";
 
+    /* Fast charging — USER_VOTER on the kernel COOL_DOWN votable.
+     * svooc_2_0_curr_table: 0 unvotes (SuperVOOC 9.5A / 100W), 1 = 1500 mA,
+     * 5 = 3000 mA. Night mode is only applied while fast charging is off. */
+    public static final String NODE_COOL_DOWN = "/sys/class/oplus_chg/battery/cool_down";
+    public static final String KEY_FAST_CHARGING = "fast_charging";
+    public static final String KEY_NIGHT_CHARGING = "night_charging";
+    public static final String ACTION_BOOST_CHARGING =
+            "org.lineageos.device.settings.action.BOOST_CHARGING";
+    /** Settings.System: 1 while a cool_down cap is in effect (SystemUI HUD tip). */
+    public static final String SETTINGS_CHARGE_BOOST_AVAILABLE =
+            "device_settings_charge_boost_available";
+    /**
+     * Settings.System HUD policy for SystemUI (do not read oplus_chg from
+     * platform_app). 0 = unlimited SuperVOOC, 1 = 3A / ~30W, 2 = night mode.
+     */
+    public static final String SETTINGS_CHARGE_HUD_MODE =
+            "device_settings_charge_hud_mode";
+    public static final int CHARGE_HUD_UNLIMITED = 0;
+    public static final int CHARGE_HUD_STANDARD = 1;
+    public static final int CHARGE_HUD_NIGHT = 2;
+
     public static final int BYPASS_OFF = 0;
     public static final int BYPASS_WAITING = 1;
     public static final int BYPASS_ON = 2;

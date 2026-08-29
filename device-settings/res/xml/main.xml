@@ -99,8 +99,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="gaming"
-        android:title="@string/gaming_category_title">
+        android:key="battery"
+        android:title="@string/battery_category_title">
 
         <Preference
             android:key="bypass_charging"
@@ -108,6 +108,28 @@
             android:title="@string/bypass_charging_title"
             android:summary="@string/bypass_charging_summary"
             android:fragment="org.lineageos.device.settings.bypasschrg.BypassChargingFragment" />
+
+        <SwitchPreferenceCompat
+            android:key="fast_charging"
+            android:icon="@drawable/ic_fast_charging"
+            android:title="@string/fast_charging_title"
+            android:summary="@string/fast_charging_summary"
+            android:defaultValue="true"
+            android:disableDependentsState="true" />
+
+        <SwitchPreferenceCompat
+            android:key="night_charging"
+            android:icon="@drawable/ic_night_charging"
+            android:title="@string/night_charging_title"
+            android:summary="@string/night_charging_summary"
+            android:defaultValue="false"
+            android:dependency="fast_charging" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="gaming"
+        android:title="@string/gaming_category_title">
 
         <Preference
             android:key="refresh_rate"

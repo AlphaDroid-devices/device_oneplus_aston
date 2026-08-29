@@ -49,6 +49,7 @@ import org.lineageos.device.settings.display.AodBrightnessController;
 import org.lineageos.device.settings.display.DisplayModeController;
 import org.lineageos.device.settings.display.HbmController;
 import org.lineageos.device.settings.display.PwmController;
+import org.lineageos.device.settings.fastcharge.FastChargeController;
 import org.lineageos.device.settings.utils.AppPreferencesHelper;
 import org.lineageos.device.settings.utils.FileUtils;
 import org.lineageos.device.settings.utils.PackageListAdapter.PackageItem;
@@ -72,11 +73,14 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
     private SwitchPreferenceCompat mOnePulsePWMSwitch;
     private SwitchPreferenceCompat mHbmSwitch;
     private SwitchPreferenceCompat mAodHighBrightnessSwitch;
+    private SwitchPreferenceCompat mFastChargeSwitch;
+    private SwitchPreferenceCompat mNightChargeSwitch;
 
     private HbmController mHbmController;
     private PwmController mPwmController;
     private DisplayModeController mDisplayModeController;
     private AodBrightnessController mAodBrightnessController;
+    private FastChargeController mFastChargeController;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -86,6 +90,7 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
         mPwmController = PwmController.getInstance(getContext());
         mDisplayModeController = DisplayModeController.getInstance(getContext());
         mAodBrightnessController = AodBrightnessController.getInstance(getContext());
+        mFastChargeController = FastChargeController.getInstance(getContext());
 
         mOnePulsePWMSwitch = (SwitchPreferenceCompat) findPreference(Constants.KEY_ONEPULSE_PWM);
         if (FileUtils.isFileWritable(Constants.NODE_ONEPULSE_PWM)) {
@@ -120,10 +125,38 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
             }
         }
 
+        initFastChargePreferences();
+
         // Sync UI state based on current HBM/PWM state
         syncHbmPwmState();
 
         initNotificationSliderPreference();
+    }
+
+    private void initFastChargePreferences() {
+        mFastChargeSwitch = (SwitchPreferenceCompat) findPreference(Constants.KEY_FAST_CHARGING);
+        mNightChargeSwitch = (SwitchPreferenceCompat) findPreference(Constants.KEY_NIGHT_CHARGING);
+
+        boolean supported = mFastChargeController.isSupported()
+                && FileUtils.isFileWritable(Constants.NODE_COOL_DOWN);
+        if (supported) {
+            if (mFastChargeSwitch != null) {
+                mFastChargeSwitch.setChecked(mFastChargeController.isFastChargingEnabled());
+                mFastChargeSwitch.setOnPreferenceChangeListener(this);
+            }
+            if (mNightChargeSwitch != null) {
+                mNightChargeSwitch.setChecked(mFastChargeController.isNightModeEnabled());
+                mNightChargeSwitch.setOnPreferenceChangeListener(this);
+            }
+        } else {
+            if (mFastChargeSwitch != null) {
+                mFastChargeSwitch.setEnabled(false);
+                mFastChargeSwitch.setSummary(R.string.fast_charging_unavailable);
+            }
+            if (mNightChargeSwitch != null) {
+                mNightChargeSwitch.setEnabled(false);
+            }
+        }
     }
 
     @Override
@@ -131,6 +164,13 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
         super.onResume();
         // Refresh state when returning to settings
         syncHbmPwmState();
+        if (mFastChargeSwitch != null && mFastChargeController != null
+                && mFastChargeSwitch.isEnabled()) {
+            mFastChargeSwitch.setChecked(mFastChargeController.isFastChargingEnabled());
+        }
+        if (mNightChargeSwitch != null && mFastChargeController != null) {
+            mNightChargeSwitch.setChecked(mFastChargeController.isNightModeEnabled());
+        }
     }
 
     /**
@@ -256,6 +296,22 @@ public class DeviceSettings extends SettingsBasePreferenceFragment
                 // Preference still updated — restore will re-apply when the node is ready.
             }
             Log.i(TAG, "AOD high brightness " + (high ? "enabled (50 nits)" : "disabled (10 nits)"));
+            return true;
+        } else if (preference == mFastChargeSwitch) {
+            boolean enabled = (Boolean) newValue;
+            if (!mFastChargeController.setFastChargingEnabled(enabled)) {
+                Log.w(TAG, "Failed to set fast charging=" + enabled);
+                return false;
+            }
+            Log.i(TAG, "Fast charging " + (enabled ? "enabled (SuperVOOC 100W)" : "disabled"));
+            return true;
+        } else if (preference == mNightChargeSwitch) {
+            boolean enabled = (Boolean) newValue;
+            if (!mFastChargeController.setNightModeEnabled(enabled)) {
+                Log.w(TAG, "Failed to set night charging=" + enabled);
+                return false;
+            }
+            Log.i(TAG, "Night charging " + (enabled ? "enabled (1.5A)" : "disabled"));
             return true;
         }
 

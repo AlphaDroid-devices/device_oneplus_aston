@@ -25,6 +25,7 @@ import androidx.preference.PreferenceManager;
 
 import org.lineageos.device.settings.bypasschrg.BypassChargingController;
 import org.lineageos.device.settings.bypasschrg.BypassChargingManager;
+import org.lineageos.device.settings.fastcharge.FastChargeController;
 import org.lineageos.device.settings.display.AodBrightnessController;
 import org.lineageos.device.settings.display.DisplayModeController;
 import org.lineageos.device.settings.display.HbmController;
@@ -75,6 +76,7 @@ public class DeviceSettingsService extends Service {
 
     private void initializeSubsystems() {
         initializeBypassCharging();
+        initializeFastCharge();
         initializePwm();
         initializeAodBrightness();
         initializeTestTe();
@@ -93,6 +95,16 @@ public class DeviceSettingsService extends Service {
             if (Constants.DEBUG) Log.i(TAG, "BypassCharging initialized");
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize BypassCharging", e);
+        }
+    }
+
+    private void initializeFastCharge() {
+        if (Constants.DEBUG) Log.i(TAG, "Initializing FastCharge");
+        try {
+            FastChargeController.getInstance(this).restore();
+            if (Constants.DEBUG) Log.i(TAG, "FastCharge initialized");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to initialize FastCharge", e);
         }
     }
 
@@ -284,6 +296,11 @@ public class DeviceSettingsService extends Service {
         } catch (Exception e) {
             Log.e(TAG, "Failed to handle power connected", e);
         }
+        try {
+            FastChargeController.getInstance(this).handlePowerConnected();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to handle fast-charge power connected", e);
+        }
     }
 
     private void handlePowerDisconnected() {
@@ -296,6 +313,11 @@ public class DeviceSettingsService extends Service {
             BypassChargingController.getInstance(this).handlePowerDisconnected();
         } catch (Exception e) {
             Log.e(TAG, "Failed to handle power disconnected", e);
+        }
+        try {
+            FastChargeController.getInstance(this).handlePowerDisconnected();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to handle fast-charge power disconnected", e);
         }
     }
 }

@@ -137,6 +137,17 @@
             android:name=".bypasschrg.BypassChargingManager"
             android:exported="false" />
 
+        <!-- Charging-animation long-press: one-shot full-speed until unplug.
+             Restricted to SystemUI (STATUS_BAR_SERVICE). -->
+        <receiver
+            android:name=".fastcharge.FastChargeBoostReceiver"
+            android:exported="true"
+            android:permission="android.permission.STATUS_BAR_SERVICE">
+            <intent-filter>
+                <action android:name="org.lineageos.device.settings.action.BOOST_CHARGING" />
+            </intent-filter>
+        </receiver>
+
         <!-- BypassCharging QS Tile -->
         <service
             android:name=".bypasschrg.BypassChargingTile"

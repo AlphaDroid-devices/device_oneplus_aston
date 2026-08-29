@@ -1,5 +1,6 @@
-# Bypass Charging
-# rw: BypassChargingController read-verifies every write to mmi_charging_enable
+# Bypass Charging / Fast charging
+# rw: BypassChargingController (mmi_charging_enable) and FastChargeController
+# (cool_down). Both nodes are genfs-labeled vendor_sysfs_usb_supply.
 allow system_app vendor_sysfs_usb_supply:file rw_file_perms;
 
 # Gamebar
