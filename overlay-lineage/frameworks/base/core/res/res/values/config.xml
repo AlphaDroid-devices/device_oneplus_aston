@@ -19,4 +19,7 @@
 
     <!-- Lineage Health -->
     <bool name="config_supportsChargingControl">false</bool>
+
+    <!-- Validated: SoftwareMusicHal in system_server may arm the Now Playing session. -->
+    <bool name="config_supportsBackgroundMusicRecognition">true</bool>
 </resources>
