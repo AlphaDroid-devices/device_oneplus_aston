@@ -18,6 +18,8 @@ package org.lineageos.device.settings.gamebar;
 
 import android.util.Log;
 
+import org.lineageos.device.settings.ThermalZones;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,7 +37,6 @@ public class GameBarCpuInfo {
     private static long sPrevIdle = -1;
     private static long sPrevTotal = -1;
 
-    private static final String CPU_TEMP_PATH = "/sys/class/thermal/thermal_zone0/temp";
     private static final String CPU_SYSFS = "/sys/devices/system/cpu/";
 
     /**
@@ -141,26 +142,16 @@ public class GameBarCpuInfo {
      * Read CPU temperature. Returns a formatted string (e.g. "41.3") or "N/A"
      */
     public static String getCpuTemp() {
-        String line = readLine(CPU_TEMP_PATH);
+        String path = ThermalZones.cpuTempPath();
+        if (path == null) return "N/A";
+        String line = readLine(path);
         if (line == null) return "N/A";
         line = line.trim();
         try {
-            float raw = Float.parseFloat(line);
-            // many devices use millidegrees (i.e. /1000) and some use deci-degrees (/10). Try heuristics:
-            float c;
-            if (raw > 1000) {
-                // millidegrees
-                c = raw / 1000f;
-            } else if (raw > 100) {
-                // deci-degrees (e.g., value 410 -> 41.0)
-                c = raw / 10f;
-            } else {
-                // already degrees
-                c = raw;
-            }
-            return String.format(Locale.getDefault(), "%.1f", c);
+            return String.format(Locale.getDefault(), "%.1f",
+                    ThermalZones.toCelsius(Float.parseFloat(line)));
         } catch (NumberFormatException e) {
-            Log.w(TAG, "Failed parsing CPU temp from " + CPU_TEMP_PATH, e);
+            Log.w(TAG, "Failed parsing CPU temp from " + path, e);
             return "N/A";
         }
     }
