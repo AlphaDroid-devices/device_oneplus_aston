@@ -17,4 +17,9 @@
         internet,wifi,cell,bt,flashlight,dnd,modes_dnd,alarm,airplane,nfc,rotation,battery,controls,wallet,cast,screenrecord,ui_style,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,qr_code_scanner,onehanded,color_correction,dream,font_scaling,record_issue,hearing_devices,notes,desktopeffects,ambient_display,aod,caffeine,heads_up,powershare,reading_mode,sync,usb_tether,vpn,sound,cpuinfo,fpsinfo,compass,dataswitch,volume_panel,smartpixels,weather,screenshot,locale,dns,preferred_network,vpn_tethering
     </string>
 
+    <!-- CPU Info sensor. thermal_zone31 is cpuss-0; the framework default
+         thermal_zone0 is the RF power amplifier and reads ~9C low. Paired with
+         config_cpuTempDivider=1000 from the common overlay. -->
+    <string name="config_cpuTempSensor" translatable="false">/sys/class/thermal/thermal_zone31/temp</string>
+
 </resources>
